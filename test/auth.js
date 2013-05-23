@@ -24,7 +24,7 @@ $(document).ready(function() {
     ok($.ajax.calledWithExactly({
       url: apiUrl + '/login',
       type: 'POST',
-      headers: {'Authorization': 'Basic ' + btoa(user.jid + ':' + user.password)}
+      headers: {'Authorization': Util.authHeader(user.jid, user.password)}
     }));
   }
 

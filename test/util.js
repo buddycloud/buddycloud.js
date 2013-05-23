@@ -1,5 +1,5 @@
 var Util = (function() {
-  function init(apiUrl, user) {
+  function init(apiUrl, userJid, userPassword) {
     // Initialize lib
     buddycloud.init(apiUrl);
 
@@ -8,11 +8,16 @@ var Util = (function() {
     server.respondWith('POST', apiUrl + '/login', [200, {'Content-Type': 'text/plain'}, 'OK']);
 
     // Do login
-    buddycloud.Auth.login(user.jid, user.password);
+    buddycloud.Auth.login(userJid, userPassword);
     server.respond();
   }
 
+  function authHeader(userJid, userPassword) {
+    return 'Basic ' + btoa(userJid + ':' + userPassword);
+  }
+
   return {
-    init: init
+    init: init,
+    authHeader: authHeader
   };
 })();

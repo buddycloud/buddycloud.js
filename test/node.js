@@ -11,7 +11,7 @@ $(document).ready(function() {
 
   module('buddycloud.Node', {
     setup: function() {
-      Util.init(apiUrl, user);
+      Util.init(apiUrl, user.jid, user.password);
       sinon.spy($, 'ajax');
     },
     teardown: function() {
@@ -24,7 +24,7 @@ $(document).ready(function() {
     ok($.ajax.calledWithExactly({
       url: apiUrl + '/' + channel + '/' + node,
       type: 'POST',
-      headers: {'Authorization': 'Basic ' + btoa(user.jid + ':' + user.password)}
+      headers: {'Authorization': Util.authHeader(user.jid, user.password)}
     }));
   }
 

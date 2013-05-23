@@ -111,10 +111,10 @@
       var item = path.item || '';
 
       var opt = {
-        url: apiUrl(channel, node, item),
+        url: apiUrl(channel, 'content', node, item),
         type: 'GET',
         headers: {
-          'Accept': 'aplication/json'
+          'Accept': 'application/json'
         }
       };
 
@@ -138,11 +138,11 @@
       var content = item.content;
 
       var opt = {
-        url: apiUrl(channel, node),
+        url: apiUrl(channel, 'content', node),
         type: 'POST',
         headers: {
           'Authorization': authHeader(),
-          'Accept': 'aplication/json'
+          'Accept': 'application/json'
         },
         data: JSON.stringify({'content': content}),
         dataType: 'json'

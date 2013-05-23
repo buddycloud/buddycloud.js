@@ -10,7 +10,7 @@ $(document).ready(function() {
 
   module('buddycloud.Content', {
     setup: function() {
-      Util.init(apiUrl, user);
+      Util.init(apiUrl, user.jid, user.password);
       sinon.spy($, 'ajax');
     },
     teardown: function() {
@@ -37,8 +37,7 @@ $(document).ready(function() {
 
     function() {
       // Mock HTTP API server
-
-      var url = apiUrl + '/' + channel + '/' + node + '/';
+      var url = apiUrl + '/' + channel + '/content/' + node + '/';
       var server = this.sandbox.useFakeServer();
       server.respondWith('GET', url,
                          [200, {'Content-Type': 'application/json'}, JSON.stringify(responseContent)]);
@@ -47,8 +46,8 @@ $(document).ready(function() {
         url: url,
         type: 'GET',
         headers: {
-          'Authorization': 'Basic ' + btoa(user.jid + ':' + user.password),
-          'Accept': 'aplication/json'
+          'Authorization': Util.authHeader(user.jid, user.password),
+          'Accept': 'application/json'
         }
       };
 
@@ -71,7 +70,7 @@ $(document).ready(function() {
       buddycloud.reset();
 
       // Mock HTTP API server
-      var url = apiUrl + '/' + channel + '/' + node + '/';
+      var url = apiUrl + '/' + channel + '/content/' + node + '/';
       var server = this.sandbox.useFakeServer();
       server.respondWith('GET', url,
                          [200, {'Content-Type': 'application/json'}, JSON.stringify(responseContent)]);
@@ -80,7 +79,7 @@ $(document).ready(function() {
         url: url,
         type: 'GET',
         headers: {
-          'Accept': 'aplication/json'
+          'Accept': 'application/json'
         }
       };
 
@@ -101,7 +100,7 @@ $(document).ready(function() {
 
     function() {
       // Mock HTTP API server
-      var url = apiUrl + '/' + channel + '/' + node + '/';
+      var url = apiUrl + '/' + channel + '/content/' + node + '/';
       var server = this.sandbox.useFakeServer();
       server.respondWith('GET', url,
                          [200, {'Content-Type': 'application/json'}, JSON.stringify(responseContent)]);
@@ -110,8 +109,8 @@ $(document).ready(function() {
         url: url,
         type: 'GET',
         headers: {
-          'Authorization': 'Basic ' + btoa(user.jid + ':' + user.password),
-          'Accept': 'aplication/json'
+          'Authorization': Util.authHeader(user.jid, user.password),
+          'Accept': 'application/json'
         }
       };
 
@@ -132,7 +131,7 @@ $(document).ready(function() {
 
     function() {
       // Mock HTTP API server
-      var url = apiUrl + '/' + channel + '/' + node + '/';
+      var url = apiUrl + '/' + channel + '/content/' + node + '/';
       var server = this.sandbox.useFakeServer();
       server.respondWith('GET', url + '?max=3&after=000',
                          [200, {'Content-Type': 'application/json'}, JSON.stringify(responseContent)]);
@@ -141,8 +140,8 @@ $(document).ready(function() {
         url: url,
         type: 'GET',
         headers: {
-          'Authorization': 'Basic ' + btoa(user.jid + ':' + user.password),
-          'Accept': 'aplication/json'
+          'Authorization': Util.authHeader(user.jid, user.password),
+          'Accept': 'application/json'
         },
         data: {after: '000', max: 3}
       };
@@ -164,7 +163,7 @@ $(document).ready(function() {
 
     function() {
       // Mock HTTP API server
-      var url = apiUrl + '/' + channel + '/' + node + '/' + itemId;
+      var url = apiUrl + '/' + channel + '/content/' + node + '/' + itemId;
       var server = this.sandbox.useFakeServer();
       server.respondWith('GET', url,
                          [200, {'Content-Type': 'application/json'}, JSON.stringify(item)]);
@@ -173,8 +172,8 @@ $(document).ready(function() {
         url: url,
         type: 'GET',
         headers: {
-          'Authorization': 'Basic ' + btoa(user.jid + ':' + user.password),
-          'Accept': 'aplication/json'
+          'Authorization': Util.authHeader(user.jid, user.password),
+          'Accept': 'application/json'
         }
       };
 
@@ -195,7 +194,7 @@ $(document).ready(function() {
 
     function() {
       // Mock HTTP API server
-      var url = apiUrl + '/' + channel + '/' + node + '/' + itemId;
+      var url = apiUrl + '/' + channel + '/content/' + node + '/' + itemId;
       var server = this.sandbox.useFakeServer();
       server.respondWith('GET', url,
                          [200, {'Content-Type': 'application/json'}, JSON.stringify(item)]);
@@ -204,8 +203,8 @@ $(document).ready(function() {
         url: url,
         type: 'GET',
         headers: {
-          'Authorization': 'Basic ' + btoa(user.jid + ':' + user.password),
-          'Accept': 'aplication/json'
+          'Authorization': Util.authHeader(user.jid, user.password),
+          'Accept': 'application/json'
         }
       };
 
@@ -227,7 +226,7 @@ $(document).ready(function() {
 
     function() {
       // Mock HTTP API server
-      var url = apiUrl + '/' + channel + '/' + node;
+      var url = apiUrl + '/' + channel + '/content/' + node;
       var server = this.sandbox.useFakeServer();
       server.respondWith('POST', url,
                          [201, {'Content-Type': 'application/json'}, JSON.stringify(item)]);
@@ -236,8 +235,8 @@ $(document).ready(function() {
         url: url,
         type: 'POST',
         headers: {
-          'Authorization': 'Basic ' + btoa(user.jid + ':' + user.password),
-          'Accept': 'aplication/json'
+          'Authorization': Util.authHeader(user.jid, user.password),
+          'Accept': 'application/json'
         },
         data: JSON.stringify({'content': itemContent}),
         dataType: 'json'
