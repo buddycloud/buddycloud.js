@@ -22,11 +22,11 @@ $(document).ready(function() {
   });
 
   function checkAjax() {
-    ok($.ajax.withArgs({
+    ok($.ajax.calledWithExactly({
       url: apiUrl + '/account',
       type: 'POST',
       data: JSON.strinfigy({'username': user.jid, 'password': user.password, 'email': user.email})
-    }).calledOnce);
+    }));
   }
 
   test(

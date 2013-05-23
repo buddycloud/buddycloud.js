@@ -8,7 +8,11 @@
   buddycloud._api = 'https://api.buddycloud.org';
   var _jid, _password, _email;
 
-  function authHeader() {
+  function authHeader(jid, password) {
+    if (jid && password) {
+      return 'Basic ' + btoa(jid + ':' + password);
+    }
+
     return ready() ? 'Basic ' + btoa(_jid + ':' + _password) : null;
   }
 
@@ -74,9 +78,7 @@
       var opt = {
         url: apiUrl(endpoint),
         type: 'POST',
-        beforeSend: function(xhr) {
-          xhr.setRequestHeader('Authorization', authHeader());
-        }
+        headers: {'Authorization': authHeader(jid, password)}
       };
 
       var promise = $.ajax(opt);
@@ -95,10 +97,34 @@
       var opt = {
         url: apiUrl(channel, node),
         type: 'POST',
-        beforeSend: function(xhr) {
-          xhr.setRequestHeader('Authorization', authHeader());
+        headers: {'Authorization': authHeader()}
+      };
+
+      return $.ajax(opt);
+    }
+  };
+
+  buddycloud.Content = {
+    get: function(path, params) {
+      var channel = path.channel;
+      var node = path.node;
+      var item = path.item || '';
+
+      var opt = {
+        url: apiUrl(channel, node, item),
+        type: 'GET',
+        headers: {
+          'Authorization': authHeader(),
+          'Accept': 'aplication/json'
         }
       };
+
+      if (!item && params) {
+        // Only supported params
+        if (params.max && params.after) {
+          opt.data = params;
+        }
+      }
 
       return $.ajax(opt);
     }

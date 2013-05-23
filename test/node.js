@@ -11,8 +11,7 @@ $(document).ready(function() {
 
   module('buddycloud.Node', {
     setup: function() {
-      buddycloud.init(apiUrl);
-      buddycloud.Auth.login(user);
+      Util.init(apiUrl, user);
       sinon.spy($, 'ajax');
     },
     teardown: function() {
@@ -22,12 +21,10 @@ $(document).ready(function() {
   });
 
   function checkAjax() {
-    ok($.ajax.calledWithArgs({
+    ok($.ajax.calledWithExactly({
       url: apiUrl + '/' + channel + '/' + node,
       type: 'POST',
-      beforeSend: function(xhr) {
-        xhr.setRequestHeader('Authorization', 'Basic ' + btoa(user.jid + ':' + user.password));
-      }
+      headers: {'Authorization': 'Basic ' + btoa(user.jid + ':' + user.password)}
     }));
   }
 

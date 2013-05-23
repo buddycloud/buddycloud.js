@@ -21,12 +21,10 @@ $(document).ready(function() {
   });
 
   function checkAjax() {
-    ok($.ajax.calledWithArgs({
+    ok($.ajax.calledWithExactly({
       url: apiUrl + '/login',
       type: 'POST',
-      beforeSend: function(xhr) {
-        xhr.setRequestHeader('Authorization', 'Basic ' + btoa(user.jid + ':' + user.password));
-      }
+      headers: {'Authorization': 'Basic ' + btoa(user.jid + ':' + user.password)}
     }));
   }
 
