@@ -25,8 +25,9 @@ $(document).ready(function() {
 
   // buddycloud.Content.get
 
-  var itemId = 123;
-  var item = {content: 'abc', id: '123'};
+  var itemId = '123';
+  var itemContent = 'abc';
+  var item = {content: itemContent, id: itemId};
   var responseContent = [item,
                          {content: 'def', id: '456'},
                          {content: 'ghi', id: '789'}];
@@ -47,6 +48,38 @@ $(document).ready(function() {
         type: 'GET',
         headers: {
           'Authorization': 'Basic ' + btoa(user.jid + ':' + user.password),
+          'Accept': 'aplication/json'
+        }
+      };
+
+      buddycloud.Content.get({'channel': channel, 'node': node}).done(function(data) {
+        equal(JSON.stringify(data), JSON.stringify(responseContent));
+      }).error(function() {
+        ok(false, 'unexpected error');
+      }).always(function() {
+        checkAjax(opt);
+      });
+
+      server.respond();
+    }
+  );
+
+  test(
+    'fetch all content without login',
+
+    function() {
+      buddycloud.reset();
+
+      // Mock HTTP API server
+      var url = apiUrl + '/' + channel + '/' + node + '/';
+      var server = this.sandbox.useFakeServer();
+      server.respondWith('GET', url,
+                         [200, {'Content-Type': 'application/json'}, JSON.stringify(responseContent)]);
+
+      var opt = {
+        url: url,
+        type: 'GET',
+        headers: {
           'Accept': 'aplication/json'
         }
       };
@@ -189,5 +222,36 @@ $(document).ready(function() {
   );
 
   // buddycloud.Content.add
+  test(
+    'add content',
 
+    function() {
+      // Mock HTTP API server
+      var url = apiUrl + '/' + channel + '/' + node;
+      var server = this.sandbox.useFakeServer();
+      server.respondWith('POST', url,
+                         [201, {'Content-Type': 'application/json'}, JSON.stringify(item)]);
+
+      var opt = {
+        url: url,
+        type: 'POST',
+        headers: {
+          'Authorization': 'Basic ' + btoa(user.jid + ':' + user.password),
+          'Accept': 'aplication/json'
+        },
+        data: JSON.stringify({'content': itemContent}),
+        dataType: 'json'
+      };
+
+      buddycloud.Content.add({'channel': channel, 'node': node, 'content': itemContent}).done(function(data) {
+        equal(JSON.stringify(data), JSON.stringify(item));
+      }).error(function() {
+        ok(false, 'unexpected error');
+      }).always(function() {
+        checkAjax(opt);
+      });
+
+      server.respond();
+    }
+  );
 });

@@ -114,10 +114,13 @@
         url: apiUrl(channel, node, item),
         type: 'GET',
         headers: {
-          'Authorization': authHeader(),
           'Accept': 'aplication/json'
         }
       };
+
+      if (ready()) {
+        opt.headers['Authorization'] = authHeader();
+      }
 
       if (!item && params) {
         // Only supported params
@@ -125,6 +128,25 @@
           opt.data = params;
         }
       }
+
+      return $.ajax(opt);
+    },
+
+    add: function(item) {
+      var channel = item.channel;
+      var node = item.node;
+      var content = item.content;
+
+      var opt = {
+        url: apiUrl(channel, node),
+        type: 'POST',
+        headers: {
+          'Authorization': authHeader(),
+          'Accept': 'aplication/json'
+        },
+        data: JSON.stringify({'content': content}),
+        dataType: 'json'
+      };
 
       return $.ajax(opt);
     }
