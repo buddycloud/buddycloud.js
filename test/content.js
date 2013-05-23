@@ -96,6 +96,38 @@ $(document).ready(function() {
   );
 
   test(
+    'fetch all content without login on private channel',
+
+    function() {
+      buddycloud.reset();
+
+      // Mock HTTP API server
+      var url = apiUrl + '/' + channel + '/content/' + node + '/';
+      var server = this.sandbox.useFakeServer();
+      server.respondWith('GET', url,
+                         [403, {'Content-Type': 'text/plain'}, 'Forbidden']);
+
+      var opt = {
+        url: url,
+        type: 'GET',
+        headers: {
+          'Accept': 'application/json'
+        }
+      };
+
+      buddycloud.Content.get({'channel': channel, 'node': node}).done(function(data) {
+        ok(false, 'should fail');
+      }).error(function() {
+        ok(true, 'user now allowed error');
+      }).always(function() {
+        checkAjax(opt);
+      });
+
+      server.respond();
+    }
+  );
+
+  test(
     'fetch content using not supported parameters',
 
     function() {
@@ -173,6 +205,38 @@ $(document).ready(function() {
         type: 'GET',
         headers: {
           'Authorization': Util.authHeader(user.jid, user.password),
+          'Accept': 'application/json'
+        }
+      };
+
+      buddycloud.Content.get({'channel': channel, 'node': node, 'item': itemId}).done(function(data) {
+        equal(JSON.stringify(data), JSON.stringify(item));
+      }).error(function() {
+        ok(false, 'unexpected error');
+      }).always(function() {
+        checkAjax(opt);
+      });
+
+      server.respond();
+    }
+  );
+
+  test(
+    'fetch specific item without login',
+
+    function() {
+      buddycloud.reset();
+
+      // Mock HTTP API server
+      var url = apiUrl + '/' + channel + '/content/' + node + '/' + itemId;
+      var server = this.sandbox.useFakeServer();
+      server.respondWith('GET', url,
+                         [200, {'Content-Type': 'application/json'}, JSON.stringify(item)]);
+
+      var opt = {
+        url: url,
+        type: 'GET',
+        headers: {
           'Accept': 'application/json'
         }
       };
