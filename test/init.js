@@ -1,12 +1,16 @@
 $(document).ready(function() {
+  'use strict';
 
-  apiUrl = 'https://api.TEST.COM';
-  bc = buddycloud;
+  var apiUrl = 'https://api.TEST.COM';
 
-  module('buddycloud.Auth');
+  module('buddycloud');
 
-  test('init()', function() {
-    bc.init({'apiUrl': apiUrl});
-    equal(false, bc.ready(), 'should not be ready yet');
-  });
+  test(
+    'initialize',
+
+    function() {
+      buddycloud.init(apiUrl);
+      equal(false, buddycloud.ready(), 'should not be ready yet');
+    }
+  );
 });

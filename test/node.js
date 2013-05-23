@@ -1,33 +1,56 @@
 $(document).ready(function() {
+  'use strict';
 
-  apiUrl = 'https://api.TEST.COM';
-  user = {
+  var apiUrl = 'https://api.TEST.COM';
+  var user = {
     jid: 'user@TEST.COM',
     password: 'password'
   };
-  channel = 'test@topics.buddycloud.org';
-  node = 'node';
-  bc = buddycloud;
+  var channel = 'test@topics.buddycloud.org';
+  var node = 'node';
 
-  module('buddycloud.Node');
-
-  test('create()', function() {
-    // Mock HTTP API server
-    var server = this.sandbox.useFakeServer();
-    server.respondWith('POST', apiUrl + '/account',
-                       [201, {'Content-Type': 'text/plain'}, 'OK']);
-
-    bc.Node.create(channel, node).then(
-      function() {
-        ok(bc.ready(), 'should be ready');
-      },
-      function() {
-        // Force fail
-        ok(false, 'should call success function');
-      }
-    );
-
-    server.respond();
+  module('buddycloud.Node', {
+    setup: function() {
+      buddycloud.init(apiUrl);
+      buddycloud.Auth.login(user);
+      sinon.spy($, 'ajax');
+    },
+    teardown: function() {
+      buddycloud.reset();
+      $.ajax.restore();
+    }
   });
+
+  function checkAjax() {
+    ok($.ajax.calledWithArgs({
+      url: apiUrl + '/' + channel + '/' + node,
+      type: 'POST',
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader('Authorization', 'Basic ' + btoa(user.jid + ':' + user.password));
+      }
+    }));
+  }
+
+  test(
+    'create node',
+
+    function() {
+      // Mock HTTP API server
+      var server = this.sandbox.useFakeServer();
+      server.respondWith('POST', apiUrl + '/' + channel + '/' + node,
+                         [201, {'Content-Type': 'text/plain'}, 'Created']);
+
+      buddycloud.Node.create(channel, node).done(function() {
+        ok(true, 'node created');
+      }).error(function() {
+        // Force fail
+        ok(false, 'node creation failure');
+      }).always(function() {
+        checkAjax();
+      });
+
+      server.respond();
+    }
+  );
 
 });

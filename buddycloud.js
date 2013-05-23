@@ -5,46 +5,46 @@
 
   buddycloud.VERSION = '0.0.1';
 
-  // Util private objects
+  buddycloud._api = 'https://api.buddycloud.org';
+  var _jid, _password, _email;
 
-  var Credentials = {
-    authHeader: function() {
-      return ready() ? 'Basic ' + btoa(this.jid + ':' + this.password) : null;
+  function authHeader() {
+    return ready() ? 'Basic ' + btoa(_jid + ':' + _password) : null;
+  }
+
+  function apiUrl() {
+    var components = _.toArray(arguments);
+    components.unshift(buddycloud._api);
+    return components.join('/');
+  }
+
+  function updateCredentials(credentials) {
+    _jid = credentials.jid;
+    _password = credentials.password;
+    _email = credentials.email;
+  }
+
+  var init = function(api) {
+    if (api) {
+      buddycloud._api = api;
     }
   };
 
-  var Config = {
-    apiUrl: 'https://api.buddycloud.org',
-
-    url: function() {
-      var components = _.toArray(arguments);
-      components.unshift(apiUrl);
-      return components.join('/');
-    }
-  };
-
-  // Util private functions
-
-  var init = function(config) {
-    Config.apiUrl = Config.apiUrl || config.apiUrl;
+  var reset = function() {
+    updateCredentials({});
   };
 
   var ready = function() {
-    return Credentials.jid && Credentials.password ? true : false;
-  };
-
-  var updateCredentials = function(credentials) {
-    Credentials.jid = credentials.jid;
-    Credentials.password = credentials.password;
-    Credentials.email = credentials.email;
+    return _jid && _password ? true : false;
   };
 
   // Assign to buddycloud
 
   buddycloud.init = init;
   buddycloud.ready = ready;
+  buddycloud.reset = reset;
 
-  var Account = buddycloud.Account = {
+  buddycloud.Account = {
     create: function(credentials) {
       var data = {
         'username': credentials.jid,
@@ -54,17 +54,12 @@
 
       var endpoint = 'account';
       var opt = {
-        url: Config.url(endpoint),
+        url: apiUrl(endpoint),
         type: 'POST',
-        'data': JSON.stringify(data)
+        data: JSON.stringify(data)
       };
 
-      var promise = $.ajax(opt);
-      promise.done(function() {
-        updateCredentials(credentials);
-      });
-
-      return promise;
+      return $.ajax(opt);
     },
 
     update: function(credentials) {
@@ -73,33 +68,35 @@
   };
 
 
-  var Auth = buddycloud.Auth = {
-    login: function(credentials) {
+  buddycloud.Auth = {
+    login: function(jid, password) {
       var endpoint = 'login';
       var opt = {
-        url: Config.url(endpoint),
+        url: apiUrl(endpoint),
         type: 'POST',
         beforeSend: function(xhr) {
-          xhr.setRequestHeader('Authorization', Credentials.authHeader());
+          xhr.setRequestHeader('Authorization', authHeader());
         }
       };
 
       var promise = $.ajax(opt);
       promise.done(function() {
-        updateCredentials(credentials);
+        updateCredentials({'jid': jid, 'password': password});
+      }).error(function() {
+        updateCredentials({});
       });
 
       return promise;
     }
   };
 
-  var Node = buddycloud.Node = {
+  buddycloud.Node = {
     create: function(channel, node) {
       var opt = {
-        url: Config.url(channel, node),
+        url: apiUrl(channel, node),
         type: 'POST',
         beforeSend: function(xhr) {
-          xhr.setRequestHeader('Authorization', Credentials.authHeader());
+          xhr.setRequestHeader('Authorization', authHeader());
         }
       };
 
