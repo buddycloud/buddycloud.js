@@ -1,4 +1,5 @@
 $(document).ready(function() {
+  'use strict';
 
   var apiUrl = 'https://api.TEST.COM';
   var user = {
@@ -128,7 +129,7 @@ $(document).ready(function() {
   );
 
   test(
-    'fetch content using not supported parameters',
+    'fetch content using invalid parameters',
 
     function() {
       // Mock HTTP API server
@@ -179,6 +180,38 @@ $(document).ready(function() {
       };
 
       buddycloud.Content.get({'channel': channel, 'node': node}, {max: 3, after: '000'}).done(function(data) {
+        equal(JSON.stringify(data), JSON.stringify(responseContent));
+      }).error(function() {
+        ok(false, 'unexpected error');
+      }).always(function() {
+        checkAjax(opt);
+      });
+
+      server.respond();
+    }
+  );
+
+  test(
+    'fetch content using just max parameter',
+
+    function() {
+      // Mock HTTP API server
+      var url = apiUrl + '/' + channel + '/content/' + node + '/';
+      var server = this.sandbox.useFakeServer();
+      server.respondWith('GET', url + '?max=3',
+                         [200, {'Content-Type': 'application/json'}, JSON.stringify(responseContent)]);
+
+      var opt = {
+        url: url,
+        type: 'GET',
+        headers: {
+          'Authorization': Util.authHeader(user.jid, user.password),
+          'Accept': 'application/json'
+        },
+        data: {max: 3}
+      };
+
+      buddycloud.Content.get({'channel': channel, 'node': node}, {max: 3}).done(function(data) {
         equal(JSON.stringify(data), JSON.stringify(responseContent));
       }).error(function() {
         ok(false, 'unexpected error');

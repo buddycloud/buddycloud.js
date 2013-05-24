@@ -1,4 +1,6 @@
 var Util = (function() {
+  'use strict';
+
   function init(apiUrl, userJid, userPassword) {
     // Initialize lib
     buddycloud.init(apiUrl);
@@ -16,8 +18,23 @@ var Util = (function() {
     return 'Basic ' + btoa(userJid + ':' + userPassword);
   }
 
+  function buildFormData(file, extra) {
+    var formData = new FormData();
+    formData.append('data', JSON.stringify(file));
+    formData.append('content-type', file.type);
+
+    if (extra) {
+      for (var i in extra) {
+        formData.append(i, extra[i]);
+      }
+    }
+
+    return formData;
+  }
+
   return {
     init: init,
-    authHeader: authHeader
+    authHeader: authHeader,
+    buildFormData: buildFormData
   };
 })();
