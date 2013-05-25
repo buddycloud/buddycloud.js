@@ -1,9 +1,19 @@
-(function($){
+(function(){
   var root = this;
 
   var buddycloud = root.buddycloud = {};
 
   buddycloud.VERSION = '0.0.1';
+
+  buddycloud.$ = root.jQuery || root.Zepto || root.ender || root.$;
+
+  function ajax(opt) {
+    if (opt.headers && opt.headers['Authorization']) {
+      opt.xhrFields = opt.xhrFields || {};
+      opt.xhrFields['withCredentials'] = true;
+    }
+    return buddycloud.$.ajax(opt);
+  }
 
   function authHeader(jid, password) {
     if (jid && password) {
@@ -121,7 +131,7 @@
         data: JSON.stringify(data)
       };
 
-      return $.ajax(opt);
+      return ajax(opt);
     },
 
     update: function(credentials) {
@@ -139,11 +149,10 @@
       var opt = {
         url: apiUrl(),
         type: 'GET',
-        xhrFields: {withCredentials: true},
         headers: {'Authorization': authHeader(jid, password)}
       };
 
-      var promise = $.ajax(opt);
+      var promise = ajax(opt);
       promise.done(function() {
         updateCredentials({'jid': jid, 'password': password});
       }).error(function() {
@@ -170,7 +179,7 @@
         headers: {'Authorization': authHeader()}
       };
 
-      return $.ajax(opt);
+      return ajax(opt);
     }
   };
 
@@ -193,7 +202,6 @@
       };
 
       if (ready()) {
-        opt.xhrFields = {withCredentials: true};
         opt.headers['Authorization'] = authHeader();
       }
 
@@ -203,7 +211,7 @@
         insertValidParameters(opt, params, 'max', 'after');
       }
 
-      return $.ajax(opt);
+      return ajax(opt);
     },
 
     add: function(item) {
@@ -218,7 +226,6 @@
       var opt = {
         url: apiUrl(channel, 'content', node),
         type: 'POST',
-        xhrFields: {withCredentials: true},
         headers: {
           'Authorization': authHeader(),
           'Accept': 'application/json'
@@ -227,7 +234,7 @@
         dataType: 'json'
       };
 
-      return $.ajax(opt);
+      return ajax(opt);
     }
   };
 
@@ -249,7 +256,6 @@
       };
 
       if (ready()) {
-        opt.xhrFields = {withCredentials: true};
         opt.headers['Authorization'] = authHeader();
       }
 
@@ -261,7 +267,7 @@
         }
       }
 
-      return $.ajax(opt);
+      return ajax(opt);
     },
 
     add: function(channel, media) {
@@ -284,7 +290,6 @@
       var opt = {
         url: apiUrl(channel, 'media'),
         type: 'POST',
-        xhrFields: {withCredentials: true},
         headers: {
           'Authorization': authHeader(),
           'Accept': 'application/json'
@@ -300,7 +305,7 @@
         opt.data = buildFormData(file, metadata);
       }
 
-      return $.ajax(opt);
+      return ajax(opt);
     }
   };
-}).call(this, jQuery);
+}).call(this);

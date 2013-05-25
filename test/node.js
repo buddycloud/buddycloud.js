@@ -24,6 +24,7 @@ $(document).ready(function() {
     ok($.ajax.calledWithExactly({
       url: apiUrl + '/' + channel + '/' + node,
       type: 'POST',
+      xhrFields: {withCredentials: true},
       headers: {'Authorization': Util.authHeader(user.jid, user.password)}
     }));
   }
