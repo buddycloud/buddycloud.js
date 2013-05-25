@@ -43,7 +43,7 @@
       next = args.shift();
     }
 
-    if (!$.isEmptyObject(temp)) {
+    if (Object.keys(temp).length > 0) {
       options.data = temp;
     }
   }
