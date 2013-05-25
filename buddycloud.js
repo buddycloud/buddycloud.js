@@ -5,30 +5,27 @@
 
   buddycloud.VERSION = '0.0.1';
 
-  buddycloud._api = 'https://api.buddycloud.org';
-  var _jid, _password, _email;
-
   function authHeader(jid, password) {
     if (jid && password) {
       return 'Basic ' + btoa(jid + ':' + password);
     }
 
-    return ready() ? 'Basic ' + btoa(_jid + ':' + _password) : null;
+    return ready() ? 'Basic ' + btoa(buddycloud.config.jid + ':' + buddycloud.config.password) : null;
   }
 
   function apiUrl() {
     var components = _.toArray(arguments);
-    components.unshift(buddycloud._api);
+    components.unshift(buddycloud.config.api);
     return components.join('/');
   }
 
   function updateCredentials(credentials) {
-    _jid = credentials.jid;
-    _password = credentials.password;
-    _email = credentials.email;
+    buddycloud.config.jid = credentials.jid;
+    buddycloud.config.password = credentials.password;
+    buddycloud.config.email = credentials.email;
   }
 
-  function insertParameters() {
+  function insertValidParameters() {
     var args = _.toArray(arguments);
     var options = args.shift();
     var params = args.shift();
@@ -81,7 +78,7 @@
 
   var init = function(api) {
     if (api) {
-      buddycloud._api = api;
+      buddycloud.config.api = api;
     }
   };
 
@@ -90,11 +87,21 @@
   };
 
   var ready = function() {
-    return _jid && _password ? true : false;
+    return buddycloud.config.jid && buddycloud.config.password ? true : false;
+  };
+
+  // Default configuration
+  var DefaultConfig = buddycloud.config = {
+    url: 'https://api.buddycloud.org',
+    jid: null,
+    password: null,
+    email: null,
+
+    // Messages
+    responseError: 'Server responded with {{statusCode}} code.'
   };
 
   // Assign to buddycloud
-
   buddycloud.init = init;
   buddycloud.ready = ready;
   buddycloud.reset = reset;
@@ -136,7 +143,7 @@
       promise.done(function() {
         updateCredentials({'jid': jid, 'password': password});
       }).error(function() {
-        updateCredentials({});
+        reset();
       });
 
       return promise;
@@ -173,9 +180,10 @@
         opt.headers['Authorization'] = authHeader();
       }
 
+      // Parameters only allowed for all content
       if (!item && params) {
         // Only supported params
-        insertParameters(opt, params, 'max', 'after');
+        insertValidParameters(opt, params, 'max', 'after');
       }
 
       return $.ajax(opt);
@@ -217,9 +225,9 @@
 
       if (params) {
         if (mediaId) {
-          insertParameters(opt, params, 'maxheight', 'maxwidth');
+          insertValidParameters(opt, params, 'maxheight', 'maxwidth');
         } else {
-          insertParameters(opt, params, 'max', 'after');
+          insertValidParameters(opt, params, 'max', 'after');
         }
       }
 
@@ -248,7 +256,7 @@
       if (typeof file === 'string') {
         opt.data = buildWebForm(file, metadata);
       } else {
-        // Must be a blob file
+        // Should be a blob file
         opt.processData = false;
         opt.data = buildFormData(file, metadata);
       }

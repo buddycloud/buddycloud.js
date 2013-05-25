@@ -6,7 +6,7 @@ $(document).ready(function() {
   module('buddycloud');
 
   test(
-    'initialize',
+    '.init(): initialize buddycloud lib',
 
     function() {
       buddycloud.init(apiUrl);

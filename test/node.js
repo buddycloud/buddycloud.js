@@ -29,7 +29,7 @@ $(document).ready(function() {
   }
 
   test(
-    'create node',
+    '.create(): successfully create node',
 
     function() {
       // Mock HTTP API server
@@ -40,8 +40,28 @@ $(document).ready(function() {
       buddycloud.Node.create(channel, node).done(function() {
         ok(true, 'node created');
       }).error(function() {
-        // Force fail
-        ok(false, 'node creation failure');
+        ok(false, 'unexpected failure');
+      }).always(function() {
+        checkAjax();
+      });
+
+      server.respond();
+    }
+  );
+
+  test(
+    '.create(): try to a create a not in a not allowed channel',
+
+    function() {
+      // Mock HTTP API server
+      var server = this.sandbox.useFakeServer();
+      server.respondWith('POST', apiUrl + '/' + channel + '/' + node,
+                         [403, {'Content-Type': 'text/plain'}, 'Forbidden']);
+
+      buddycloud.Node.create(channel, node).done(function() {
+        ok(false, 'unexpected success');
+      }).error(function() {
+        ok(true, 'node not created');
       }).always(function() {
         checkAjax();
       });

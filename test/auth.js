@@ -29,7 +29,7 @@ $(document).ready(function() {
   }
 
   test(
-    'error on login',
+    '.login(): wrong username or password',
 
     function() {
       // Mock HTTP API server
@@ -38,10 +38,10 @@ $(document).ready(function() {
                          [403, {'Content-Type': 'text/plain'}, 'Forbidden']);
 
       buddycloud.Auth.login(user.jid, user.password).done(function() {
-        ok(false, 'login success: should not login in this case');
+        ok(false, 'unexpected success');
       }).error(function() {
         // Force fail
-         equal(false, buddycloud.ready(), 'login failure: expected login failure');
+         equal(false, buddycloud.ready(), 'login failure');
       }).always(function() {
         checkAjax();
       });
@@ -51,7 +51,7 @@ $(document).ready(function() {
   );
 
   test(
-    'successful login',
+    '.login(): successful login',
 
     function() {
       // Mock HTTP API server
@@ -60,10 +60,10 @@ $(document).ready(function() {
                          [200, {'Content-Type': 'text/plain'}, 'OK']);
 
       buddycloud.Auth.login(user.jid, user.password).done(function() {
-        ok(buddycloud.ready(), 'login success: lib changed its state to ready');
+        ok(buddycloud.ready(), 'successful login');
       }).error(function() {
         // Force fail
-        ok(false, 'login failure: unexpected login error');
+        ok(false, 'unexpected login error');
       }).always(function() {
         checkAjax();
       });

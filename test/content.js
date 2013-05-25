@@ -34,7 +34,7 @@ $(document).ready(function() {
                          {content: 'ghi', id: '789'}];
 
   test(
-    'fetch all content',
+    '.get(): fetch all content from a channel',
 
     function() {
       // Mock HTTP API server
@@ -53,7 +53,7 @@ $(document).ready(function() {
       };
 
       buddycloud.Content.get({'channel': channel, 'node': node}).done(function(data) {
-        equal(JSON.stringify(data), JSON.stringify(responseContent));
+        equal(JSON.stringify(data), JSON.stringify(responseContent), 'successful get');
       }).error(function() {
         ok(false, 'unexpected error');
       }).always(function() {
@@ -65,7 +65,7 @@ $(document).ready(function() {
   );
 
   test(
-    'fetch all content without login',
+    '.get(): try to fetch all content without login',
 
     function() {
       buddycloud.reset();
@@ -85,7 +85,7 @@ $(document).ready(function() {
       };
 
       buddycloud.Content.get({'channel': channel, 'node': node}).done(function(data) {
-        equal(JSON.stringify(data), JSON.stringify(responseContent));
+        equal(JSON.stringify(data), JSON.stringify(responseContent), 'successful content retrieve');
       }).error(function() {
         ok(false, 'unexpected error');
       }).always(function() {
@@ -97,7 +97,7 @@ $(document).ready(function() {
   );
 
   test(
-    'fetch all content without login on private channel',
+    '.get(): fetch all content of a private channel without login',
 
     function() {
       buddycloud.reset();
@@ -117,9 +117,9 @@ $(document).ready(function() {
       };
 
       buddycloud.Content.get({'channel': channel, 'node': node}).done(function(data) {
-        ok(false, 'should fail');
+        ok(false, 'unexpected success');
       }).error(function() {
-        ok(true, 'user now allowed error');
+        ok(true, 'error on get channel content');
       }).always(function() {
         checkAjax(opt);
       });
@@ -129,7 +129,7 @@ $(document).ready(function() {
   );
 
   test(
-    'fetch content using invalid parameters',
+    '.get(): fetch content using invalid parameters',
 
     function() {
       // Mock HTTP API server
@@ -148,7 +148,7 @@ $(document).ready(function() {
       };
 
       buddycloud.Content.get({'channel': channel, 'node': node}, {abc: 1, 123: '000'}).done(function(data) {
-        equal(JSON.stringify(data), JSON.stringify(responseContent));
+        equal(JSON.stringify(data), JSON.stringify(responseContent), 'successful content retrieve without parameters');
       }).error(function() {
         ok(false, 'unexpected error');
       }).always(function() {
@@ -160,7 +160,7 @@ $(document).ready(function() {
   );
 
   test(
-    'fetch content using parameters',
+    '.get(): fetch content using parameters',
 
     function() {
       // Mock HTTP API server
@@ -180,7 +180,7 @@ $(document).ready(function() {
       };
 
       buddycloud.Content.get({'channel': channel, 'node': node}, {max: 3, after: '000'}).done(function(data) {
-        equal(JSON.stringify(data), JSON.stringify(responseContent));
+        equal(JSON.stringify(data), JSON.stringify(responseContent), 'successful content retrieve with parameters');
       }).error(function() {
         ok(false, 'unexpected error');
       }).always(function() {
@@ -192,7 +192,7 @@ $(document).ready(function() {
   );
 
   test(
-    'fetch content using just max parameter',
+    '.get(): fetch content using just max parameter',
 
     function() {
       // Mock HTTP API server
@@ -212,7 +212,7 @@ $(document).ready(function() {
       };
 
       buddycloud.Content.get({'channel': channel, 'node': node}, {max: 3}).done(function(data) {
-        equal(JSON.stringify(data), JSON.stringify(responseContent));
+        equal(JSON.stringify(data), JSON.stringify(responseContent), 'successful content retrieve with only max parameter');
       }).error(function() {
         ok(false, 'unexpected error');
       }).always(function() {
@@ -224,7 +224,7 @@ $(document).ready(function() {
   );
 
   test(
-    'fetch specific item',
+    '.get(): fetch specific item',
 
     function() {
       // Mock HTTP API server
@@ -243,7 +243,7 @@ $(document).ready(function() {
       };
 
       buddycloud.Content.get({'channel': channel, 'node': node, 'item': itemId}).done(function(data) {
-        equal(JSON.stringify(data), JSON.stringify(item));
+        equal(JSON.stringify(data), JSON.stringify(item), 'successful item retrieve');
       }).error(function() {
         ok(false, 'unexpected error');
       }).always(function() {
@@ -255,7 +255,7 @@ $(document).ready(function() {
   );
 
   test(
-    'fetch specific item without login',
+    '.get(): fetch specific item without login',
 
     function() {
       buddycloud.reset();
@@ -275,7 +275,7 @@ $(document).ready(function() {
       };
 
       buddycloud.Content.get({'channel': channel, 'node': node, 'item': itemId}).done(function(data) {
-        equal(JSON.stringify(data), JSON.stringify(item));
+        equal(JSON.stringify(data), JSON.stringify(item), 'successful item retrieve without login');
       }).error(function() {
         ok(false, 'unexpected error');
       }).always(function() {
@@ -287,7 +287,7 @@ $(document).ready(function() {
   );
 
   test(
-    'fetch specific item with not necessary params',
+    '.get(): fetch specific item with not allowed params',
 
     function() {
       // Mock HTTP API server
@@ -306,7 +306,7 @@ $(document).ready(function() {
       };
 
       buddycloud.Content.get({'channel': channel, 'node': node, 'item': itemId}, {max: 2}).done(function(data) {
-        equal(JSON.stringify(data), JSON.stringify(item));
+        equal(JSON.stringify(data), JSON.stringify(item), 'successful item retrieve item without parameters');
       }).error(function() {
         ok(false, 'unexpected error');
       }).always(function() {
@@ -319,7 +319,7 @@ $(document).ready(function() {
 
   // buddycloud.Content.add
   test(
-    'add content',
+    '.add(): add item to channel content',
 
     function() {
       // Mock HTTP API server
@@ -340,9 +340,42 @@ $(document).ready(function() {
       };
 
       buddycloud.Content.add({'channel': channel, 'node': node, 'content': itemContent}).done(function(data) {
-        equal(JSON.stringify(data), JSON.stringify(item));
+        equal(JSON.stringify(data), JSON.stringify(item), 'item successfully appended to content');
       }).error(function() {
         ok(false, 'unexpected error');
+      }).always(function() {
+        checkAjax(opt);
+      });
+
+      server.respond();
+    }
+  );
+
+  test(
+    '.add(): try to add item to not allowed channel content',
+
+    function() {
+      // Mock HTTP API server
+      var url = apiUrl + '/' + channel + '/content/' + node;
+      var server = this.sandbox.useFakeServer();
+      server.respondWith('POST', url,
+                         [403, {'Content-Type': 'text/plain'}, 'Forbidden']);
+
+      var opt = {
+        url: url,
+        type: 'POST',
+        headers: {
+          'Authorization': Util.authHeader(user.jid, user.password),
+          'Accept': 'application/json'
+        },
+        data: JSON.stringify({'content': itemContent}),
+        dataType: 'json'
+      };
+
+      buddycloud.Content.add({'channel': channel, 'node': node, 'content': itemContent}).done(function() {
+        ok(false , 'unexpected success');
+      }).error(function() {
+        ok(true, 'item not appended to channel content');
       }).always(function() {
         checkAjax(opt);
       });

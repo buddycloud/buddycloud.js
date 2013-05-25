@@ -44,7 +44,7 @@ $(document).ready(function() {
   // buddycloud.Media.get
 
   test(
-    'get all media metadata',
+    '.get(): get all media metadata',
 
     function() {
       var url = apiUrl + '/' + channel + '/media/';
@@ -64,10 +64,10 @@ $(document).ready(function() {
       };
 
       buddycloud.Media.get({'channel': channel}).done(function(data) {
-        equal(JSON.stringify(data), JSON.stringify([metadata1, metadata2]));
+        equal(JSON.stringify(data), JSON.stringify([metadata1, metadata2]), 'all media metadata successfully retrieved');
       }).error(function() {
         // Force fail
-        ok(false, 'get all media metadata failure');
+        ok(false, 'unexpected failure');
       }).always(function() {
         checkAjax(opt);
       });
@@ -77,7 +77,7 @@ $(document).ready(function() {
   );
 
   test(
-    'get all media metadata using parameters',
+    '.get(): get all media metadata using parameters',
 
     function() {
       var url = apiUrl + '/' + channel + '/media/';
@@ -99,10 +99,10 @@ $(document).ready(function() {
       };
 
       buddycloud.Media.get({'channel': channel}, params).done(function(data) {
-        equal(JSON.stringify(data), JSON.stringify([metadata1, metadata2]));
+        equal(JSON.stringify(data), JSON.stringify([metadata1, metadata2]), 'specified metadata successfully retrieved');
       }).error(function() {
         // Force fail
-        ok(false, 'get all media metadata failure');
+        ok(false, 'unexpected failure');
       }).always(function() {
         checkAjax(opt);
       });
@@ -112,7 +112,7 @@ $(document).ready(function() {
   );
 
   test(
-    'get all media metadata using invalid parameters',
+    '.get(): get all media metadata using invalid parameters',
 
     function() {
       var url = apiUrl + '/' + channel + '/media/';
@@ -133,10 +133,10 @@ $(document).ready(function() {
       };
 
       buddycloud.Media.get({'channel': channel}, params).done(function(data) {
-        equal(JSON.stringify(data), JSON.stringify([metadata1, metadata2]));
+        equal(JSON.stringify(data), JSON.stringify([metadata1, metadata2]), 'media metadata retrieved without parameters');
       }).error(function() {
         // Force fail
-        ok(false, 'get all media metadata failure');
+        ok(false, 'unexpected failure');
       }).always(function() {
         checkAjax(opt);
       });
@@ -146,7 +146,7 @@ $(document).ready(function() {
   );
 
   test(
-    'get media file',
+    '.get(): get media file',
 
     function() {
       var url = apiUrl + '/' + channel + '/media/' + metadata1.id;
@@ -172,10 +172,10 @@ $(document).ready(function() {
       };
 
       buddycloud.Media.get({'channel': channel, 'mediaId': metadata1.id}).done(function() {
-        ok(true, 'successful get media');
+        ok(true, 'media successfully retrieved');
       }).error(function() {
         // Force fail
-        ok(false, 'get all media metadata failure');
+        ok(false, 'unexpected failure');
       }).always(function() {
         checkAjax(opt);
       });
@@ -185,7 +185,7 @@ $(document).ready(function() {
   );
 
   test(
-    'get media file from not allowed channel',
+    '.get(): get media file from not allowed channel',
 
     function() {
       var url = apiUrl + '/' + channel + '/media/' + metadata1.id;
@@ -205,10 +205,9 @@ $(document).ready(function() {
       };
 
       buddycloud.Media.get({'channel': channel, 'mediaId': metadata1.id}).done(function() {
-        ok(false, 'should fail');
+        ok(false, 'unexpected success');
       }).error(function() {
-        // Force fail
-        ok(true, 'forbidden');
+        ok(true, 'media not retrieved');
       }).always(function() {
         checkAjax(opt);
       });
@@ -218,7 +217,7 @@ $(document).ready(function() {
   );
 
   test(
-    'get media file using maxHeight',
+    '.get(): get media file using maxHeight',
 
     function() {
       var url = apiUrl + '/' + channel + '/media/' + metadata1.id;
@@ -246,10 +245,10 @@ $(document).ready(function() {
       };
 
       buddycloud.Media.get({'channel': channel, 'mediaId': metadata1.id}, params).done(function() {
-        ok(true, 'successful get media');
+        ok(true, 'media thumbnail successfully retrieved');
       }).error(function() {
         // Force fail
-        ok(false, 'get all media metadata failure');
+        ok(false, 'unexpected failure');
       }).always(function() {
         checkAjax(opt);
       });
@@ -259,7 +258,7 @@ $(document).ready(function() {
   );
 
   test(
-    'get media file using maxWidth',
+    '.get(): get media file using maxWidth',
 
     function() {
       var url = apiUrl + '/' + channel + '/media/' + metadata1.id;
@@ -287,10 +286,10 @@ $(document).ready(function() {
       };
 
       buddycloud.Media.get({'channel': channel, 'mediaId': metadata1.id}, params).done(function() {
-        ok(true, 'successful get media');
+        ok(true, 'media thumbnail successfully retrieved');
       }).error(function() {
         // Force fail
-        ok(false, 'get all media metadata failure');
+        ok(false, 'unexpected failure');
       }).always(function() {
         checkAjax(opt);
       });
@@ -300,7 +299,7 @@ $(document).ready(function() {
   );
 
   test(
-    'get media file using maxHeight and maxWidth',
+    '.get(): get media file using maxHeight and maxWidth',
 
     function() {
       var url = apiUrl + '/' + channel + '/media/' + metadata1.id;
@@ -328,10 +327,10 @@ $(document).ready(function() {
       };
 
       buddycloud.Media.get({'channel': channel, 'mediaId': metadata1.id}, params).done(function() {
-        ok(true, 'successful get media');
+        ok(true, 'media thumbnail successfully retrieved');
       }).error(function() {
         // Force fail
-        ok(false, 'get all media metadata failure');
+        ok(false, 'unexpected failure');
       }).always(function() {
         checkAjax(opt);
       });
@@ -347,7 +346,7 @@ $(document).ready(function() {
   }
 
   test(
-    'add blob file media',
+    '.add(): upload media file using FormData',
 
     function() {
       var url = apiUrl + '/' + channel + '/media';
@@ -372,10 +371,10 @@ $(document).ready(function() {
       };
 
       buddycloud.Media.add(channel, {'file': mediaFile}).done(function() {
-        ok(true, 'successful upload media');
+        ok(true, 'media successfully uploaded');
       }).error(function() {
         // Force fail
-        ok(false, 'get all media metadata failure');
+        ok(false, 'unexpected failure');
       }).always(function() {
         checkAjax(opt);
       });
@@ -389,7 +388,7 @@ $(document).ready(function() {
   }
 
   test(
-    'add Base64 media',
+    '.add(): upload media using WebForm',
 
     function() {
       var url = apiUrl + '/' + channel + '/media';
@@ -413,10 +412,10 @@ $(document).ready(function() {
       };
 
       buddycloud.Media.add(channel, {'file': mediaFile, 'content-type': 'image/jpeg'}).done(function() {
-        ok(true, 'successful upload media');
+        ok(true, 'media successfully uploaded');
       }).error(function() {
         // Force fail
-        ok(false, 'get all media metadata failure');
+        ok(false, 'unexpected failure');
       }).always(function() {
         checkAjax(opt);
       });

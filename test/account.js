@@ -30,7 +30,7 @@ $(document).ready(function() {
   }
 
   test(
-    'error on create new user',
+    '.create(): error on create new user',
 
     function() {
       // Mock HTTP API server
@@ -39,10 +39,9 @@ $(document).ready(function() {
                          [503, {'Content-Type': 'text/plain'}, 'Service Unavailable']);
 
       buddycloud.Account.create(user).done(function() {
-          ok(false, 'user should not be created');
+          ok(false, 'unexpected success');
       }).error(function() {
-          // Force fail
-          ok(true, 'user created');
+          ok(true, 'user not created');
       }).always(function() {
         checkAjax();
       });
@@ -52,7 +51,7 @@ $(document).ready(function() {
   );
 
   test(
-    'create new user',
+    '.create(): create a new user',
 
     function() {
       // Mock HTTP API server
