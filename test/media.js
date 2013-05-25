@@ -57,6 +57,7 @@ $(document).ready(function() {
       var opt = {
         url: url,
         type: 'GET',
+        xhrFields: {withCredentials: true},
         headers: {
           'Authorization': Util.authHeader(user.jid, user.password),
           'Accept': 'application/json'
@@ -91,6 +92,7 @@ $(document).ready(function() {
       var opt = {
         url: url,
         type: 'GET',
+        xhrFields: {withCredentials: true},
         headers: {
           'Authorization': Util.authHeader(user.jid, user.password),
           'Accept': 'application/json'
@@ -126,6 +128,7 @@ $(document).ready(function() {
       var opt = {
         url: url,
         type: 'GET',
+        xhrFields: {withCredentials: true},
         headers: {
           'Authorization': Util.authHeader(user.jid, user.password),
           'Accept': 'application/json'
@@ -165,6 +168,7 @@ $(document).ready(function() {
       var opt = {
         url: url,
         type: 'GET',
+        xhrFields: {withCredentials: true},
         headers: {
           'Authorization': Util.authHeader(user.jid, user.password),
           'Accept': 'application/json'
@@ -198,6 +202,7 @@ $(document).ready(function() {
       var opt = {
         url: url,
         type: 'GET',
+        xhrFields: {withCredentials: true},
         headers: {
           'Authorization': Util.authHeader(user.jid, user.password),
           'Accept': 'application/json'
@@ -237,6 +242,7 @@ $(document).ready(function() {
       var opt = {
         url: url,
         type: 'GET',
+        xhrFields: {withCredentials: true},
         headers: {
           'Authorization': Util.authHeader(user.jid, user.password),
           'Accept': 'application/json'
@@ -278,6 +284,7 @@ $(document).ready(function() {
       var opt = {
         url: url,
         type: 'GET',
+        xhrFields: {withCredentials: true},
         headers: {
           'Authorization': Util.authHeader(user.jid, user.password),
           'Accept': 'application/json'
@@ -319,6 +326,7 @@ $(document).ready(function() {
       var opt = {
         url: url,
         type: 'GET',
+        xhrFields: {withCredentials: true},
         headers: {
           'Authorization': Util.authHeader(user.jid, user.password),
           'Accept': 'application/json'

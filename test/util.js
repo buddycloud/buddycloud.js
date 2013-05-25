@@ -7,7 +7,7 @@ var Util = (function() {
 
     // Fake server
     var server = sinon.sandbox.useFakeServer();
-    server.respondWith('POST', apiUrl + '/login', [200, {'Content-Type': 'text/plain'}, 'OK']);
+    server.respondWith('GET', apiUrl, [204, {'Content-Type': 'text/plain'}, 'No content']);
 
     // Do login
     buddycloud.Auth.login(userJid, userPassword);

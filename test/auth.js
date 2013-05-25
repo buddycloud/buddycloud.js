@@ -22,8 +22,9 @@ $(document).ready(function() {
 
   function checkAjax() {
     ok($.ajax.calledWithExactly({
-      url: apiUrl + '/login',
-      type: 'POST',
+      url: apiUrl,
+      type: 'GET',
+      xhrFields: {withCredentials: true},
       headers: {'Authorization': Util.authHeader(user.jid, user.password)}
     }));
   }
@@ -34,8 +35,8 @@ $(document).ready(function() {
     function() {
       // Mock HTTP API server
       var server = this.sandbox.useFakeServer();
-      server.respondWith('POST', apiUrl + '/login',
-                         [403, {'Content-Type': 'text/plain'}, 'Forbidden']);
+      server.respondWith('GET', apiUrl,
+                         [401, {'Content-Type': 'text/plain'}, 'Unauthorized']);
 
       buddycloud.Auth.login(user.jid, user.password).done(function() {
         ok(false, 'unexpected success');
@@ -56,8 +57,8 @@ $(document).ready(function() {
     function() {
       // Mock HTTP API server
       var server = this.sandbox.useFakeServer();
-      server.respondWith('POST', apiUrl + '/login',
-                         [200, {'Content-Type': 'text/plain'}, 'OK']);
+      server.respondWith('GET', apiUrl,
+                         [204, {'Content-Type': 'text/plain'}, 'No content']);
 
       buddycloud.Auth.login(user.jid, user.password).done(function() {
         ok(buddycloud.ready(), 'successful login');

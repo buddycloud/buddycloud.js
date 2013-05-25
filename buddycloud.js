@@ -1,4 +1,4 @@
-(function($, _){
+(function($){
   var root = this;
 
   var buddycloud = root.buddycloud = {};
@@ -14,8 +14,8 @@
   }
 
   function apiUrl() {
-    var components = _.toArray(arguments);
-    components.unshift(buddycloud.config.api);
+    var components = Array.prototype.slice.call(arguments);
+    components.unshift(buddycloud.config.url);
     return components.join('/');
   }
 
@@ -26,7 +26,7 @@
   }
 
   function insertValidParameters() {
-    var args = _.toArray(arguments);
+    var args = Array.prototype.slice.call(arguments);
     var options = args.shift();
     var params = args.shift();
     var next = args.shift();
@@ -78,7 +78,7 @@
 
   var init = function(api) {
     if (api) {
-      buddycloud.config.api = api;
+      buddycloud.config.url = api;
     }
   };
 
@@ -98,7 +98,7 @@
     email: null,
 
     // Messages
-    responseError: 'Server responded with {{statusCode}} code.'
+    notLoggedError: 'You must login first: buddycloud.Auth.login(jid, password).'
   };
 
   // Assign to buddycloud
@@ -132,10 +132,14 @@
 
   buddycloud.Auth = {
     login: function(jid, password) {
-      var endpoint = 'login';
+      if (!jid || !password) {
+        throw new Error('You must provide a jid and a password.');
+      }
+
       var opt = {
-        url: apiUrl(endpoint),
-        type: 'POST',
+        url: apiUrl(),
+        type: 'GET',
+        xhrFields: {withCredentials: true},
         headers: {'Authorization': authHeader(jid, password)}
       };
 
@@ -152,6 +156,14 @@
 
   buddycloud.Node = {
     create: function(channel, node) {
+      if (!channel || !node) {
+        throw new Error('You must provide a channel and a node: buddycloud.Node.create(channel, node).');
+      }
+
+      if (!ready()) {
+        throw new Error(buddycloud.config.notLoggedError);
+      }
+
       var opt = {
         url: apiUrl(channel, node),
         type: 'POST',
@@ -168,6 +180,10 @@
       var node = path.node;
       var item = path.item || '';
 
+      if (!channel || !node) {
+        throw new Error('You must provide at least a channel and a node: buddycloud.Content.get({channel, node, item}).');
+      }
+
       var opt = {
         url: apiUrl(channel, 'content', node, item),
         type: 'GET',
@@ -177,6 +193,7 @@
       };
 
       if (ready()) {
+        opt.xhrFields = {withCredentials: true};
         opt.headers['Authorization'] = authHeader();
       }
 
@@ -194,9 +211,14 @@
       var node = item.node;
       var content = item.content;
 
+      if (!channel || !node || !item) {
+        throw new Error('You must provide a channel, a node and an item: buddycloud.Content.add({channel, node, item}).');
+      }
+
       var opt = {
         url: apiUrl(channel, 'content', node),
         type: 'POST',
+        xhrFields: {withCredentials: true},
         headers: {
           'Authorization': authHeader(),
           'Accept': 'application/json'
@@ -214,14 +236,22 @@
       var channel = path.channel;
       var mediaId = path.mediaId || '';
 
+      if (!channel) {
+        throw new Error('You must provide at least a channel: buddycloud.Media.get({channel, mediaId}).');
+      }
+
       var opt = {
         url: apiUrl(channel, 'media', mediaId),
         type: 'GET',
         headers: {
-          'Authorization': authHeader(),
           'Accept': 'application/json'
         }
       };
+
+      if (ready()) {
+        opt.xhrFields = {withCredentials: true};
+        opt.headers['Authorization'] = authHeader();
+      }
 
       if (params) {
         if (mediaId) {
@@ -233,7 +263,16 @@
 
       return $.ajax(opt);
     },
+
     add: function(channel, media) {
+      if (!channel || !media || !media.file) {
+        throw new Error('You must provide at least a channel and a file: buddycloud.Media.get(channel, {file}).');
+      }
+
+      if (!ready()) {
+        throw new Error(buddycloud.config.notLoggedError);
+      }
+
       var file = media.file;
       var metadata = {};
       for (var property in media) {
@@ -264,4 +303,4 @@
       return $.ajax(opt);
     }
   };
-}).call(this, jQuery, _);
+}).call(this, jQuery);
