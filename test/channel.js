@@ -8,9 +8,8 @@ $(document).ready(function() {
     password: 'password'
   };
   var channel = 'test@topics.TEST.COM';
-  var node = 'node';
 
-  module('buddycloud.Node', {
+  module('buddycloud.channel', {
     setup: function() {
       Util.init(apiUrl, domain, user.jid, user.password);
       sinon.spy($, 'ajax');
@@ -23,7 +22,7 @@ $(document).ready(function() {
 
   function checkAjax() {
     ok($.ajax.calledWithExactly({
-      url: apiUrl + '/' + channel + '/' + node,
+      url: apiUrl + '/' + channel,
       type: 'POST',
       xhrFields: {withCredentials: true},
       headers: {'Authorization': Util.authHeader(user.jid, user.password)}
@@ -31,16 +30,16 @@ $(document).ready(function() {
   }
 
   test(
-    '.create(): successfully create node',
+    '.create(): successfully create topic channel',
 
     function() {
       // Mock HTTP API server
       var server = this.sandbox.useFakeServer();
-      server.respondWith('POST', apiUrl + '/' + channel + '/' + node,
+      server.respondWith('POST', apiUrl + '/' + channel,
                          [201, {'Content-Type': 'text/plain'}, 'Created']);
 
-      buddycloud.Node.create(channel, node).done(function() {
-        ok(true, 'node created');
+      buddycloud.Channel.create(channel).done(function() {
+        ok(true, 'channel created');
       }).error(function() {
         ok(false, 'unexpected failure');
       }).always(function() {
@@ -52,18 +51,18 @@ $(document).ready(function() {
   );
 
   test(
-    '.create(): try to a create a not in a not allowed channel',
+    '.create(): try to a create an already existent topic channel',
 
     function() {
       // Mock HTTP API server
       var server = this.sandbox.useFakeServer();
-      server.respondWith('POST', apiUrl + '/' + channel + '/' + node,
-                         [403, {'Content-Type': 'text/plain'}, 'Forbidden']);
+      server.respondWith('POST', apiUrl + '/' + channel,
+                         [500, {'Content-Type': 'text/plain'}, 'Internal Server Error']);
 
-      buddycloud.Node.create(channel, node).done(function() {
+      buddycloud.Channel.create(channel).done(function() {
         ok(false, 'unexpected success');
       }).error(function() {
-        ok(true, 'node not created');
+        ok(true, 'topic channel not created');
       }).always(function() {
         checkAjax();
       });
@@ -78,12 +77,32 @@ $(document).ready(function() {
     function() {
       throws(
         function() {
-          buddycloud.Node.create(node);
+          buddycloud.Channel.create();
         },
         function(error) {
-          return error.message === Util.paramMissingMessage('Node.create(channel, node)');
+          return error.message === Util.paramMissingMessage('Channel.create(channel)');
         },
         'throws required parameters error'
+      );
+    }
+  );
+
+
+  test(
+    '.create(): try to create channel without being logged',
+
+    function() {
+      // Remove login information
+      buddycloud.Auth.logout();
+
+      throws(
+        function() {
+          buddycloud.Channel.create(channel);
+        },
+        function(error) {
+          return error.message === Util.notLoggedMessage();
+        },
+        'throws not logged error'
       );
     }
   );

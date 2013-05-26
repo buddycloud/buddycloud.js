@@ -3,6 +3,7 @@ $(document).ready(function() {
 
 
   var apiUrl = 'https://api.TEST.COM';
+  var domain = 'TEST.COM';
   var user = {
     jid: 'user@TEST.COM',
     password: 'password',
@@ -11,7 +12,7 @@ $(document).ready(function() {
 
   module('buddycloud.Account', {
     setup: function() {
-      buddycloud.init(apiUrl);
+      buddycloud.init({'apiUrl': apiUrl, 'domain': domain});
       // Spy $.ajax
       sinon.spy($, 'ajax');
     },

@@ -100,9 +100,13 @@
     return message;
   }
 
-  var init = function(api) {
-    if (api) {
-      buddycloud.config.url = api;
+  var init = function(config) {
+    if (config.apiUrl) {
+      buddycloud.config.url = config.apiUrl;
+    }
+
+    if (config.domain) {
+      buddycloud.config.domain = config.domain;
     }
   };
 
@@ -117,9 +121,13 @@
   // Default configuration
   var DefaultConfig = buddycloud.config = {
     url: 'https://api.buddycloud.org',
+    domain: 'buddycloud.org',
     jid: null,
     password: null,
     email: null,
+
+    // Topic channels jid
+    appendTopic: true,
 
     // Messages
     paramMissingErr: 'Parameters missing. Method usage: $1.',
@@ -129,7 +137,6 @@
   // Assign to buddycloud
   buddycloud.init = init;
   buddycloud.ready = ready;
-  buddycloud.reset = reset;
 
   buddycloud.Account = {
     create: function(credentials) {
@@ -179,23 +186,37 @@
       });
 
       return promise;
+    },
+
+    logout: function() {
+      // Reset credentials
+      reset();
     }
   };
 
-  buddycloud.Node = {
-    create: function(channel, node) {
-      if (!channel || !node) {
-        raiseError(buddycloud.config.paramMissingErr, ['Node.create(channel, node)']);
+  buddycloud.Channel = {
+    create: function(channel) {
+      if (!channel) {
+        raiseError(buddycloud.config.paramMissingErr, ['Channel.create(channel)']);
       }
 
       if (!ready()) {
         raiseError(buddycloud.config.notLoggedErr);
       }
 
+      // If channel jid not provided, append configured domain
+      if (channel.indexOf('@') === -1) {
+        var domain = buddycloud.config.domain;
+        // Currently, the pattern in buddycloud is that not personal channels have "topic" on its jid
+        channel += buddycloud.config.appendTopic ? '@topics' + domain : '@' + domain;
+      }
+
       var opt = {
-        url: apiUrl(channel, node),
+        url: apiUrl(channel),
         type: 'POST',
-        headers: {'Authorization': authHeader()}
+        headers: {
+          'Authorization': authHeader()
+        }
       };
 
       return ajax(opt);
@@ -255,6 +276,30 @@
         },
         data: JSON.stringify({'content': content}),
         dataType: 'json'
+      };
+
+      return ajax(opt);
+    },
+
+    remove: function(path) {
+      var channel = path.channel;
+      var node = path.node;
+      var item = path.item;
+
+      if (!channel || !node || !item) {
+        raiseError(buddycloud.config.paramMissingErr, ['Content.remove({channel, node, item})']);
+      }
+
+      if (!ready()) {
+        raiseError(buddycloud.config.notLoggedErr);
+      }
+
+      var opt = {
+        url: apiUrl(channel, 'content', node, item),
+        type: 'DELETE',
+        headers: {
+          'Authorization': authHeader()
+        }
       };
 
       return ajax(opt);
@@ -348,4 +393,25 @@
       return ajax(opt);
     }
   };
+
+  buddycloud.Node = {
+    create: function(channel, node) {
+      if (!channel || !node) {
+        raiseError(buddycloud.config.paramMissingErr, ['Node.create(channel, node)']);
+      }
+
+      if (!ready()) {
+        raiseError(buddycloud.config.notLoggedErr);
+      }
+
+      var opt = {
+        url: apiUrl(channel, node),
+        type: 'POST',
+        headers: {'Authorization': authHeader()}
+      };
+
+      return ajax(opt);
+    }
+  };
+
 }).call(this);

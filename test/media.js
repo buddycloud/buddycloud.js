@@ -2,19 +2,20 @@ $(document).ready(function() {
   'use strict';
 
   var apiUrl = 'https://api.TEST.COM';
+  var domain = 'TEST.COM';
   var user = {
     jid: 'user@TEST.COM',
     password: 'password'
   };
-  var channel = 'test@topics.buddycloud.org';
+  var channel = 'test@topics.TEST.COM';
 
   module('buddycloud.Media', {
     setup: function() {
-      Util.init(apiUrl, user.jid, user.password);
+      Util.init(apiUrl, domain, user.jid, user.password);
       sinon.spy($, 'ajax');
     },
     teardown: function() {
-      buddycloud.reset();
+      buddycloud.Auth.logout();
       $.ajax.restore();
     }
   });
@@ -455,6 +456,24 @@ $(document).ready(function() {
           return error.message === Util.paramMissingMessage('Media.add(channel, {file[, content-type, filename, title]})');
         },
         'throws required parameters error'
+      );
+    }
+  );
+
+  test(
+    '.add(): try to upload media without being logged',
+
+    function() {
+      buddycloud.Auth.logout();
+
+      throws(
+        function() {
+          buddycloud.Media.add(channel, {'file': base64File(), 'content-type': 'image/jpeg'});
+        },
+        function(error) {
+          return error.message === Util.notLoggedMessage();
+        },
+        'throws not logged error'
       );
     }
   );

@@ -1,7 +1,7 @@
 var Util = (function() {
-  function init(apiUrl, userJid, userPassword) {
+  function init(apiUrl, domain, userJid, userPassword) {
     // Initialize lib
-    buddycloud.init(apiUrl);
+    buddycloud.init({'apiUrl': apiUrl, 'domain': domain});
 
     // Fake server
     var server = sinon.sandbox.useFakeServer();

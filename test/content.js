@@ -2,20 +2,21 @@ $(document).ready(function() {
   'use strict';
 
   var apiUrl = 'https://api.TEST.COM';
+  var domain = 'TEST.COM';
   var user = {
     jid: 'user@TEST.COM',
     password: 'password'
   };
-  var channel = 'test@topics.buddycloud.org';
+  var channel = 'test@topics.TEST.COM';
   var node = 'posts';
 
   module('buddycloud.Content', {
     setup: function() {
-      Util.init(apiUrl, user.jid, user.password);
+      Util.init(apiUrl, domain, user.jid, user.password);
       sinon.spy($, 'ajax');
     },
     teardown: function() {
-      buddycloud.reset();
+      buddycloud.Auth.logout();
       $.ajax.restore();
     }
   });
@@ -69,7 +70,7 @@ $(document).ready(function() {
     '.get(): try to fetch all content without login',
 
     function() {
-      buddycloud.reset();
+      buddycloud.Auth.logout();
 
       // Mock HTTP API server
       var url = apiUrl + '/' + channel + '/content/' + node + '/';
@@ -101,7 +102,7 @@ $(document).ready(function() {
     '.get(): fetch all content of a private channel without login',
 
     function() {
-      buddycloud.reset();
+      buddycloud.Auth.logout();
 
       // Mock HTTP API server
       var url = apiUrl + '/' + channel + '/content/' + node + '/';
@@ -263,7 +264,7 @@ $(document).ready(function() {
     '.get(): fetch specific item without login',
 
     function() {
-      buddycloud.reset();
+      buddycloud.Auth.logout();
 
       // Mock HTTP API server
       var url = apiUrl + '/' + channel + '/content/' + node + '/' + itemId;
@@ -429,7 +430,7 @@ $(document).ready(function() {
 
     function() {
       // Remove login information
-      buddycloud.reset();
+      buddycloud.Auth.logout();
 
       throws(
         function() {
@@ -443,12 +444,14 @@ $(document).ready(function() {
     }
   );
 
+  //buddycloud.Content.remove
+
   test(
     '.remove(): remove item from channel content',
 
     function() {
       // Mock HTTP API server
-      var url = apiUrl + '/' + channel + '/content/' + node;
+      var url = apiUrl + '/' + channel + '/content/' + node + '/' + itemId;
       var server = this.sandbox.useFakeServer();
       server.respondWith('DELETE', url,
                          [200, {'Content-Type': 'text/plain'}, 'OK']);
@@ -465,12 +468,78 @@ $(document).ready(function() {
       buddycloud.Content.remove({'channel': channel, 'node': node, 'item': itemId}).done(function() {
         ok(true , 'item successfully deleted');
       }).error(function() {
-        ok(true, 'unexpected error');
+        ok(false, 'unexpected error');
       }).always(function() {
         checkAjax(opt);
       });
 
       server.respond();
+    }
+  );
+
+  test(
+    '.remove(): remove content item from not allowed channel',
+
+    function() {
+      // Mock HTTP API server
+      var url = apiUrl + '/' + channel + '/content/' + node + '/' + itemId;
+      var server = this.sandbox.useFakeServer();
+      server.respondWith('DELETE', url,
+                         [403, {'Content-Type': 'text/plain'}, 'Forbidden']);
+
+      var opt = {
+        url: url,
+        type: 'DELETE',
+        xhrFields: {withCredentials: true},
+        headers: {
+          'Authorization': Util.authHeader(user.jid, user.password)
+        }
+      };
+
+      buddycloud.Content.remove({'channel': channel, 'node': node, 'item': itemId}).done(function() {
+        ok(false , 'unexpected success');
+      }).error(function() {
+        ok(true, 'item not removed');
+      }).always(function() {
+        checkAjax(opt);
+      });
+
+      server.respond();
+    }
+  );
+
+  test(
+    '.remove(): not using required parameters',
+
+    function() {
+      throws(
+        function() {
+          buddycloud.Content.remove({'channel': channel, 'node': node});
+        },
+        function(error) {
+          return error.message === Util.paramMissingMessage('Content.remove({channel, node, item})');
+        },
+        'throws required parameters error'
+      );
+    }
+  );
+
+  test(
+    '.remove(): try to remove content without being logged',
+
+    function() {
+      // Remove login information
+      buddycloud.Auth.logout();
+
+      throws(
+        function() {
+          buddycloud.Content.remove({'channel': channel, 'node': node, 'item': itemId});
+        },
+        function(error) {
+          return error.message === Util.notLoggedMessage();
+        },
+        'throws not logged error'
+      );
     }
   );
 });

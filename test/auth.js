@@ -2,6 +2,7 @@ $(document).ready(function() {
   'use strict';
 
   var apiUrl = 'https://api.TEST.COM';
+  var domain = 'TEST.COM';
   var user = {
     jid: 'user@TEST.COM',
     password: 'password'
@@ -9,12 +10,12 @@ $(document).ready(function() {
 
   module('buddycloud.Auth', {
     setup: function() {
-      buddycloud.init(apiUrl);
+      buddycloud.init({'apiUrl': apiUrl, 'domain': domain});
       // Spy $.ajax
       sinon.spy($, 'ajax');
     },
     teardown: function() {
-      buddycloud.reset();
+      buddycloud.Auth.logout();
       // Restore $.ajax
       $.ajax.restore();
     }
@@ -28,6 +29,8 @@ $(document).ready(function() {
       headers: {'Authorization': Util.authHeader(user.jid, user.password)}
     }));
   }
+
+  // buddycloud.Auth.login
 
   test(
     '.login(): wrong username or password',
@@ -86,6 +89,29 @@ $(document).ready(function() {
         },
         'throws required parameters error'
       );
+    }
+  );
+
+  // buddycloud.Auth.logout()
+  test(
+    '.login(): successful login',
+
+    function() {
+      // Mock HTTP API server
+      var server = this.sandbox.useFakeServer();
+      server.respondWith('GET', apiUrl,
+                         [204, {'Content-Type': 'text/plain'}, 'No content']);
+
+      buddycloud.Auth.login(user.jid, user.password).done(function() {
+        ok(buddycloud.ready(), 'successful login');
+      }).error(function() {
+        // Force fail
+        ok(false, 'unexpected login error');
+      }).always(function() {
+        checkAjax();
+      });
+
+      server.respond();
     }
   );
 });
