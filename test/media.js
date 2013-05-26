@@ -478,4 +478,104 @@ $(document).ready(function() {
     }
   );
 
+  // buddycloud.Media.remove
+
+  test(
+    '.remove(): remove media file',
+
+    function() {
+      var url = apiUrl + '/' + channel + '/media/' + metadata1.id;
+
+      // Mock HTTP API server
+      var server = this.sandbox.useFakeServer();
+      server.respondWith('DELETE', url,
+                         [200, {'Content-Type': 'text/plain'}, 'OK']);
+
+      var opt = {
+        url: url,
+        type: 'DELETE',
+        xhrFields: {withCredentials: true},
+        headers: {
+          'Authorization': Util.authHeader(user.jid, user.password)
+        }
+      };
+
+      buddycloud.Media.remove({'channel': channel, 'mediaId': metadata1.id}).done(function() {
+        ok(true, 'media successfully deleted');
+      }).error(function() {
+        // Force fail
+        ok(false, 'unexpected failure');
+      }).always(function() {
+        checkAjax(opt);
+      });
+
+      server.respond();
+    }
+  );
+
+  test(
+    '.remove(): try to remove media file in a not allowed channel',
+
+    function() {
+      var url = apiUrl + '/' + channel + '/media/' + metadata1.id;
+
+      // Mock HTTP API server
+      var server = this.sandbox.useFakeServer();
+      server.respondWith('DELETE', url,
+                         [403, {'Content-Type': 'text/plain'}, 'Forbidden']);
+
+      var opt = {
+        url: url,
+        type: 'DELETE',
+        xhrFields: {withCredentials: true},
+        headers: {
+          'Authorization': Util.authHeader(user.jid, user.password)
+        }
+      };
+
+      buddycloud.Media.remove({'channel': channel, 'mediaId': metadata1.id}).done(function() {
+        ok(false, 'unexpected success');
+      }).error(function() {
+        ok(true, 'media not removed');
+      }).always(function() {
+        checkAjax(opt);
+      });
+
+      server.respond();
+    }
+  );
+
+  test(
+    '.remove(): not using required parameters',
+
+    function() {
+      throws(
+        function() {
+          buddycloud.Media.remove({'channel': channel});
+        },
+        function(error) {
+          return error.message === Util.paramMissingMessage('Media.remove({channel, mediaId})');
+        },
+        'throws required parameters error'
+      );
+    }
+  );
+
+  test(
+    '.remove(): try to remove media without being logged',
+
+    function() {
+      buddycloud.Auth.logout();
+
+      throws(
+        function() {
+          buddycloud.Media.remove({'channel': channel, 'mediaId': metadata1.id});
+        },
+        function(error) {
+          return error.message === Util.notLoggedMessage();
+        },
+        'throws not logged error'
+      );
+    }
+  );
 });

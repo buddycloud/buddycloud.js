@@ -391,6 +391,29 @@
       }
 
       return ajax(opt);
+    },
+
+    remove: function(media) {
+      var channel = media.channel;
+      var mediaId = media.mediaId;
+
+      if (!channel || !mediaId) {
+        raiseError(buddycloud.config.paramMissingErr, ['Media.remove({channel, mediaId})']);
+      }
+
+      if (!ready()) {
+        raiseError(buddycloud.config.notLoggedErr);
+      }
+
+      var opt = {
+        url: apiUrl(channel, 'media', mediaId),
+        type: 'DELETE',
+        headers: {
+          'Authorization': authHeader()
+        }
+      };
+
+      return ajax(opt);
     }
   };
 
