@@ -86,6 +86,20 @@
     return data;
   }
 
+  function raiseError(message, placeHolders) {
+    throw new Error(errorMessage(message, placeHolders));
+  }
+
+  function errorMessage(message, placeHolders) {
+    var pIndex = 1;
+    for (var i in placeHolders) {
+      message = message.replace('$' + pIndex, placeHolders[i]);
+      pIndex++;
+    }
+
+    return message;
+  }
+
   var init = function(api) {
     if (api) {
       buddycloud.config.url = api;
@@ -108,7 +122,8 @@
     email: null,
 
     // Messages
-    notLoggedError: 'You must login first: buddycloud.Auth.login(jid, password).'
+    paramMissingErr: 'Parameters missing. Method usage: $1.',
+    notLoggedErr: 'Must login first: buddycloud.Auth.login(jid, password).'
   };
 
   // Assign to buddycloud
@@ -118,6 +133,10 @@
 
   buddycloud.Account = {
     create: function(credentials) {
+      if (!credentials.jid || !credentials.password || !credentials.email) {
+        raiseError(buddycloud.config.paramMissingErr, ['Account.create({jid, password, email})']);
+      }
+
       var data = {
         'username': credentials.jid,
         'password': credentials.password,
@@ -143,7 +162,7 @@
   buddycloud.Auth = {
     login: function(jid, password) {
       if (!jid || !password) {
-        throw new Error('You must provide a jid and a password.');
+        raiseError(buddycloud.config.paramMissingErr, ['Auth.login(jid, password)']);
       }
 
       var opt = {
@@ -166,11 +185,11 @@
   buddycloud.Node = {
     create: function(channel, node) {
       if (!channel || !node) {
-        throw new Error('You must provide a channel and a node: buddycloud.Node.create(channel, node).');
+        raiseError(buddycloud.config.paramMissingErr, ['Node.create(channel, node)']);
       }
 
       if (!ready()) {
-        throw new Error(buddycloud.config.notLoggedError);
+        raiseError(buddycloud.config.notLoggedErr);
       }
 
       var opt = {
@@ -190,7 +209,7 @@
       var item = path.item || '';
 
       if (!channel || !node) {
-        throw new Error('You must provide at least a channel and a node: buddycloud.Content.get({channel, node, item}).');
+        raiseError(buddycloud.config.paramMissingErr, ['Content.get({channel, node[, item]}[, {max, after}])']);
       }
 
       var opt = {
@@ -219,8 +238,12 @@
       var node = item.node;
       var content = item.content;
 
-      if (!channel || !node || !item) {
-        throw new Error('You must provide a channel, a node and an item: buddycloud.Content.add({channel, node, item}).');
+      if (!channel || !node || !content) {
+        raiseError(buddycloud.config.paramMissingErr, ['Content.add({channel, node, content})']);
+      }
+
+      if (!ready()) {
+        raiseError(buddycloud.config.notLoggedErr);
       }
 
       var opt = {
@@ -239,16 +262,13 @@
   };
 
   buddycloud.Media = {
-    get: function(path, params) {
-      var channel = path.channel;
-      var mediaId = path.mediaId || '';
-
+    getMetadata: function(channel, params) {
       if (!channel) {
-        throw new Error('You must provide at least a channel: buddycloud.Media.get({channel, mediaId}).');
+        raiseError(buddycloud.config.paramMissingErr, ['Media.getMetadata(channel[,{max, after}])']);
       }
 
       var opt = {
-        url: apiUrl(channel, 'media', mediaId),
+        url: apiUrl(channel, 'media'),
         type: 'GET',
         headers: {
           'Accept': 'application/json'
@@ -260,11 +280,31 @@
       }
 
       if (params) {
-        if (mediaId) {
-          insertValidParameters(opt, params, 'maxheight', 'maxwidth');
-        } else {
-          insertValidParameters(opt, params, 'max', 'after');
-        }
+        insertValidParameters(opt, params, 'max', 'after');
+      }
+
+      return ajax(opt);
+    },
+
+    get: function(media, params) {
+      var channel = media.channel;
+      var mediaId = media.mediaId;
+
+      if (!channel || !mediaId) {
+        raiseError(buddycloud.config.paramMissingErr, ['Media.get({channel, mediaId}[, {maxheight, maxwidth}])']);
+      }
+
+      var opt = {
+        url: apiUrl(channel, 'media', mediaId),
+        type: 'GET'
+      };
+
+      if (ready()) {
+        opt.headers = {'Authorization': authHeader()};
+      }
+
+      if (params) {
+        insertValidParameters(opt, params, 'maxheight', 'maxwidth');
       }
 
       return ajax(opt);
@@ -272,11 +312,11 @@
 
     add: function(channel, media) {
       if (!channel || !media || !media.file) {
-        throw new Error('You must provide at least a channel and a file: buddycloud.Media.get(channel, {file}).');
+        raiseError(buddycloud.config.paramMissingErr, ['Media.add(channel, {file[, content-type, filename, title]})']);
       }
 
       if (!ready()) {
-        throw new Error(buddycloud.config.notLoggedError);
+        raiseError(buddycloud.config.notLoggedErr);
       }
 
       var file = media.file;

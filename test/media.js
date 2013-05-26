@@ -44,10 +44,10 @@ $(document).ready(function() {
   // buddycloud.Media.get
 
   test(
-    '.get(): get all media metadata',
+    '.getMetadata(): get all media metadata',
 
     function() {
-      var url = apiUrl + '/' + channel + '/media/';
+      var url = apiUrl + '/' + channel + '/media';
 
       // Mock HTTP API server
       var server = this.sandbox.useFakeServer();
@@ -64,7 +64,7 @@ $(document).ready(function() {
         }
       };
 
-      buddycloud.Media.get({'channel': channel}).done(function(data) {
+      buddycloud.Media.getMetadata(channel).done(function(data) {
         equal(JSON.stringify(data), JSON.stringify([metadata1, metadata2]), 'all media metadata successfully retrieved');
       }).error(function() {
         // Force fail
@@ -78,10 +78,10 @@ $(document).ready(function() {
   );
 
   test(
-    '.get(): get all media metadata using parameters',
+    '.getMetadata(): get all media metadata using parameters',
 
     function() {
-      var url = apiUrl + '/' + channel + '/media/';
+      var url = apiUrl + '/' + channel + '/media';
 
       // Mock HTTP API server
       var server = this.sandbox.useFakeServer();
@@ -100,7 +100,7 @@ $(document).ready(function() {
         data: params
       };
 
-      buddycloud.Media.get({'channel': channel}, params).done(function(data) {
+      buddycloud.Media.getMetadata(channel, params).done(function(data) {
         equal(JSON.stringify(data), JSON.stringify([metadata1, metadata2]), 'specified metadata successfully retrieved');
       }).error(function() {
         // Force fail
@@ -114,10 +114,10 @@ $(document).ready(function() {
   );
 
   test(
-    '.get(): get all media metadata using invalid parameters',
+    '.getMetadata(): get all media metadata using invalid parameters',
 
     function() {
-      var url = apiUrl + '/' + channel + '/media/';
+      var url = apiUrl + '/' + channel + '/media';
 
       // Mock HTTP API server
       var server = this.sandbox.useFakeServer();
@@ -135,7 +135,7 @@ $(document).ready(function() {
         }
       };
 
-      buddycloud.Media.get({'channel': channel}, params).done(function(data) {
+      buddycloud.Media.getMetadata(channel, params).done(function(data) {
         equal(JSON.stringify(data), JSON.stringify([metadata1, metadata2]), 'media metadata retrieved without parameters');
       }).error(function() {
         // Force fail
@@ -170,8 +170,7 @@ $(document).ready(function() {
         type: 'GET',
         xhrFields: {withCredentials: true},
         headers: {
-          'Authorization': Util.authHeader(user.jid, user.password),
-          'Accept': 'application/json'
+          'Authorization': Util.authHeader(user.jid, user.password)
         }
       };
 
@@ -204,8 +203,7 @@ $(document).ready(function() {
         type: 'GET',
         xhrFields: {withCredentials: true},
         headers: {
-          'Authorization': Util.authHeader(user.jid, user.password),
-          'Accept': 'application/json'
+          'Authorization': Util.authHeader(user.jid, user.password)
         }
       };
 
@@ -244,8 +242,7 @@ $(document).ready(function() {
         type: 'GET',
         xhrFields: {withCredentials: true},
         headers: {
-          'Authorization': Util.authHeader(user.jid, user.password),
-          'Accept': 'application/json'
+          'Authorization': Util.authHeader(user.jid, user.password)
         },
         data: params
       };
@@ -286,8 +283,7 @@ $(document).ready(function() {
         type: 'GET',
         xhrFields: {withCredentials: true},
         headers: {
-          'Authorization': Util.authHeader(user.jid, user.password),
-          'Accept': 'application/json'
+          'Authorization': Util.authHeader(user.jid, user.password)
         },
         data: params
       };
@@ -328,8 +324,7 @@ $(document).ready(function() {
         type: 'GET',
         xhrFields: {withCredentials: true},
         headers: {
-          'Authorization': Util.authHeader(user.jid, user.password),
-          'Accept': 'application/json'
+          'Authorization': Util.authHeader(user.jid, user.password)
         },
         data: params
       };
@@ -344,6 +339,22 @@ $(document).ready(function() {
       });
 
       server.respond();
+    }
+  );
+
+  test(
+    '.get(): not using required parameters',
+
+    function() {
+      throws(
+        function() {
+          buddycloud.Media.get({'mediaId': metadata1.id});
+        },
+        function(error) {
+          return error.message === Util.paramMissingMessage('Media.get({channel, mediaId}[, {maxheight, maxwidth}])');
+        },
+        'throws required parameters error'
+      );
     }
   );
 
@@ -429,6 +440,22 @@ $(document).ready(function() {
       });
 
       server.respond();
+    }
+  );
+
+  test(
+    '.add(): not using required parameters',
+
+    function() {
+      throws(
+        function() {
+          buddycloud.Media.add(channel, {'content-type': 'image/jpeg'});
+        },
+        function(error) {
+          return error.message === Util.paramMissingMessage('Media.add(channel, {file[, content-type, filename, title]})');
+        },
+        'throws required parameters error'
+      );
     }
   );
 

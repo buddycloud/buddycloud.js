@@ -1,6 +1,4 @@
 var Util = (function() {
-  'use strict';
-
   function init(apiUrl, userJid, userPassword) {
     // Initialize lib
     buddycloud.init(apiUrl);
@@ -32,9 +30,19 @@ var Util = (function() {
     return formData;
   }
 
+  function paramMissingMessage(method) {
+    return 'Parameters missing. Method usage: ' + method + '.';
+  }
+
+  function notLoggedMessage() {
+    return 'Must login first: buddycloud.Auth.login(jid, password).';
+  }
+
   return {
     init: init,
     authHeader: authHeader,
-    buildFormData: buildFormData
+    buildFormData: buildFormData,
+    paramMissingMessage: paramMissingMessage,
+    notLoggedMessage: notLoggedMessage
   };
 })();

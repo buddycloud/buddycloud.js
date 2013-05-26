@@ -71,4 +71,20 @@ $(document).ready(function() {
     }
   );
 
+  test(
+    '.create(): not using required parameters',
+
+    function() {
+      throws(
+        function() {
+          buddycloud.Node.create(node);
+        },
+        function(error) {
+          return error.message === Util.paramMissingMessage('Node.create(channel, node)');
+        },
+        'throws required parameters error'
+      );
+    }
+  );
+
 });

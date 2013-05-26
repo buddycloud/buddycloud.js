@@ -323,6 +323,22 @@ $(document).ready(function() {
     }
   );
 
+  test(
+    '.get(): not using required parameters',
+
+    function() {
+      throws(
+        function() {
+          buddycloud.Content.get({'channel': channel, 'item': itemId});
+        },
+        function(error) {
+          return error.message === Util.paramMissingMessage('Content.get({channel, node[, item]}[, {max, after}])');
+        },
+        'throws required parameters error'
+      );
+    }
+  );
+
   // buddycloud.Content.add
   test(
     '.add(): add item to channel content',
@@ -384,6 +400,72 @@ $(document).ready(function() {
         ok(false , 'unexpected success');
       }).error(function() {
         ok(true, 'item not appended to channel content');
+      }).always(function() {
+        checkAjax(opt);
+      });
+
+      server.respond();
+    }
+  );
+
+  test(
+    '.add(): not using required parameters',
+
+    function() {
+      throws(
+        function() {
+          buddycloud.Content.add({'channel': channel, 'node': node});
+        },
+        function(error) {
+          return error.message === Util.paramMissingMessage('Content.add({channel, node, content})');
+        },
+        'throws required parameters error'
+      );
+    }
+  );
+
+  test(
+    '.add(): try to add content without being logged',
+
+    function() {
+      // Remove login information
+      buddycloud.reset();
+
+      throws(
+        function() {
+          buddycloud.Content.add({'channel': channel, 'node': node, 'content': itemContent});
+        },
+        function(error) {
+          return error.message === Util.notLoggedMessage();
+        },
+        'throws not logged error'
+      );
+    }
+  );
+
+  test(
+    '.remove(): remove item from channel content',
+
+    function() {
+      // Mock HTTP API server
+      var url = apiUrl + '/' + channel + '/content/' + node;
+      var server = this.sandbox.useFakeServer();
+      server.respondWith('DELETE', url,
+                         [200, {'Content-Type': 'text/plain'}, 'OK']);
+
+      var opt = {
+        url: url,
+        type: 'DELETE',
+        xhrFields: {withCredentials: true},
+        headers: {
+          'Authorization': Util.authHeader(user.jid, user.password)
+        }
+      };
+
+      buddycloud.Content.remove({'channel': channel, 'node': node, 'item': itemId}).done(function() {
+        ok(true , 'item successfully deleted');
+      }).error(function() {
+        ok(true, 'unexpected error');
       }).always(function() {
         checkAjax(opt);
       });

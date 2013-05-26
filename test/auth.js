@@ -72,4 +72,20 @@ $(document).ready(function() {
       server.respond();
     }
   );
+
+  test(
+    '.login(): not using required parameters',
+
+    function() {
+      throws(
+        function() {
+          buddycloud.Auth.login({jid: 'jid'});
+        },
+        function(error) {
+          return error.message === Util.paramMissingMessage('Auth.login(jid, password)');
+        },
+        'throws required parameters error'
+      );
+    }
+  );
 });

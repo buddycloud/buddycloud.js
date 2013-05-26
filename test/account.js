@@ -71,4 +71,21 @@ $(document).ready(function() {
       server.respond();
     }
   );
+
+  test(
+    '.create(): not using required parameters',
+
+    function() {
+      throws(
+        function() {
+          buddycloud.Account.create({'jid': user.jid});
+        },
+        function(error) {
+          return error.message === Util.paramMissingMessage('Account.create({jid, password, email})');
+        },
+        'throws required parameters error'
+      );
+    }
+  );
+
 });
