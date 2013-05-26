@@ -453,6 +453,23 @@
       };
 
       return ajax(opt);
+    },
+
+    update: function(subscriptions) {
+      if (!ready()) {
+        raiseError(buddycloud.config.notLoggedErr);
+      }
+
+      var opt = {
+        url: apiUrl('subscribed'),
+        type: 'POST',
+        headers: {
+          'Authorization': authHeader()
+        },
+        data: JSON.stringify(subscriptions)
+      };
+
+      return ajax(opt);
     }
   };
 

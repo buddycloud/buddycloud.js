@@ -24,7 +24,7 @@ $(document).ready(function() {
     ok($.ajax.calledWithExactly(opt));
   }
 
-  var subscriptions = {'test@TEST.COM/photos':'owner',
+  var allSubscriptions = {'test@TEST.COM/photos':'owner',
     'help@topics.TEST.COM/status':'member',
     'help@topics.TEST.COM/posts':'publisher',
     'lounge@topics.TEST.COM/posts':'publisher',
@@ -35,6 +35,8 @@ $(document).ready(function() {
     'test@TEST.COM/geo/next':'owner',
     'test@TEST.COM/subscriptions':'owner',
     'test@TEST.COM/posts':'owner'};
+
+  var subscriptions = {'alice@TEST.COM': 'publisher'};
 
   // buddycloud.Subscribed.get
 
@@ -47,7 +49,7 @@ $(document).ready(function() {
       // Mock HTTP API server
       var server = this.sandbox.useFakeServer();
       server.respondWith('GET', url,
-                         [200, {'Content-Type': 'application/json'}, JSON.stringify(subscriptions)]);
+                         [200, {'Content-Type': 'application/json'}, JSON.stringify(allSubscriptions)]);
 
       var opt = {
         url: url,
@@ -60,7 +62,7 @@ $(document).ready(function() {
       };
 
       buddycloud.Subscribed.get().done(function(data) {
-        equal(JSON.stringify(data), JSON.stringify(subscriptions), 'subscriptions successfully retrieved');
+        equal(JSON.stringify(data), JSON.stringify(allSubscriptions), 'subscriptions successfully retrieved');
       }).error(function() {
         // Force fail
         ok(false, 'unexpected failure');
@@ -96,7 +98,6 @@ $(document).ready(function() {
       buddycloud.Subscribed.get().done(function(data) {
         ok(false, 'unexpected success');
       }).error(function() {
-        // Force fail
         ok(true, 'wrong username or password');
       }).always(function() {
         checkAjax(opt);
@@ -115,6 +116,93 @@ $(document).ready(function() {
       throws(
         function() {
           buddycloud.Subscribed.get();
+        },
+        function(error) {
+          return error.message === Util.notLoggedMessage();
+        },
+        'throws not logged error'
+      );
+    }
+  );
+
+  // buddycloud.Subscribed.update
+
+  test(
+    '.update(): update user subscriptions',
+
+    function() {
+      var url = apiUrl + '/subscribed';
+
+      // Mock HTTP API server
+      var server = this.sandbox.useFakeServer();
+      server.respondWith('POST', url,
+                         [200, {'Content-Type': 'text/plain'}, 'OK']);
+
+      var opt = {
+        url: url,
+        type: 'POST',
+        xhrFields: {withCredentials: true},
+        headers: {
+          'Authorization': Util.authHeader(user.jid, user.password)
+        },
+        data: JSON.stringify(subscriptions)
+      };
+
+      buddycloud.Subscribed.update(subscriptions).done(function() {
+        ok(true, 'subscriptions updated');
+      }).error(function() {
+        // Force fail
+        ok(false, 'unexpected failure');
+      }).always(function() {
+        checkAjax(opt);
+      });
+
+      server.respond();
+    }
+  );
+
+  test(
+    '.update(): wrong username or password',
+
+    function() {
+      var url = apiUrl + '/subscribed';
+
+      // Mock HTTP API server
+      var server = this.sandbox.useFakeServer();
+      server.respondWith('POST', url,
+                         [403, {'Content-Type': 'text/plain'}, 'Forbidden']);
+
+      var opt = {
+        url: url,
+        type: 'POST',
+        xhrFields: {withCredentials: true},
+        headers: {
+          'Authorization': Util.authHeader(user.jid, user.password)
+        },
+        data: JSON.stringify(subscriptions)
+      };
+
+      buddycloud.Subscribed.update(subscriptions).done(function() {
+        ok(false, 'unexpected success');
+      }).error(function() {
+        ok(true, 'subscriptions not updated');
+      }).always(function() {
+        checkAjax(opt);
+      });
+
+      server.respond();
+    }
+  );
+
+  test(
+    '.update(): try to update subscriptions without being logged',
+
+    function() {
+      buddycloud.Auth.logout();
+
+      throws(
+        function() {
+          buddycloud.Subscribed.update(subscriptions);
         },
         function(error) {
           return error.message === Util.notLoggedMessage();
