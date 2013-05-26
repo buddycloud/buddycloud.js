@@ -42,7 +42,7 @@ $(document).ready(function() {
                   'height':3264,'width':2448,
                   'entityId':'test@TEST.COM'};
 
-  // buddycloud.Media.get
+  // buddycloud.Media.getMetadata
 
   test(
     '.getMetadata(): get all media metadata',

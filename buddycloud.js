@@ -165,6 +165,70 @@
     }
   };
 
+  buddycloud.Avatar = {
+    get: function(channel, params) {
+      if (!channel) {
+        raiseError(buddycloud.config.paramMissingErr, ['Avatar.get(channel[, {maxheight, maxwidth}])']);
+      }
+
+      var opt = {
+        url: apiUrl(channel, 'media', 'avatar'),
+        type: 'GET'
+      };
+
+      if (params) {
+        insertValidParameters(opt, params, 'maxheight', 'maxwidth');
+      }
+
+      return ajax(opt);
+    },
+
+    set: function(channel, media) {
+      if (!channel || !media || !media.file) {
+        raiseError(buddycloud.config.paramMissingErr, ['Avatar.set(channel, {file[, content-type, filename, title]})']);
+      }
+
+      if (!ready()) {
+        raiseError(buddycloud.config.notLoggedErr);
+      }
+
+      var file = media.file;
+      var metadata = {};
+      for (var property in media) {
+        if (property !== 'file') {
+          metadata[property] = media[property];
+        }
+      }
+
+      var opt = {
+        url: apiUrl(channel, 'media', 'avatar'),
+        type: 'PUT',
+        headers: {
+          'Authorization': authHeader(),
+          'Accept': 'application/json'
+        }
+      };
+
+      // Check wheter it is a Base64 file
+      if (typeof file === 'string') {
+        opt.data = buildWebForm(file, metadata);
+      } else {
+        // Should be a blob file
+        opt.processData = false;
+        opt.data = buildFormData(file, metadata);
+      }
+
+      return ajax(opt);
+    },
+
+    remove: function(channel) {
+      if (!channel) {
+        raiseError(buddycloud.config.paramMissingErr, ['Avatar.remove(channel)']);
+      }
+
+      return buddycloud.Media.remove({'channel': channel, 'mediaId': 'avatar'});
+    }
+  };
 
   buddycloud.Auth = {
     login: function(jid, password) {
