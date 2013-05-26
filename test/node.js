@@ -39,7 +39,7 @@ $(document).ready(function() {
       server.respondWith('POST', apiUrl + '/' + channel + '/' + node,
                          [201, {'Content-Type': 'text/plain'}, 'Created']);
 
-      buddycloud.Node.create(channel, node).done(function() {
+      buddycloud.Node.create({'channel': channel, 'node': node}).done(function() {
         ok(true, 'node created');
       }).error(function() {
         ok(false, 'unexpected failure');
@@ -60,7 +60,7 @@ $(document).ready(function() {
       server.respondWith('POST', apiUrl + '/' + channel + '/' + node,
                          [403, {'Content-Type': 'text/plain'}, 'Forbidden']);
 
-      buddycloud.Node.create(channel, node).done(function() {
+      buddycloud.Node.create({'channel': channel, 'node': node}).done(function() {
         ok(false, 'unexpected success');
       }).error(function() {
         ok(true, 'node not created');
@@ -78,10 +78,28 @@ $(document).ready(function() {
     function() {
       throws(
         function() {
-          buddycloud.Node.create(node);
+          buddycloud.Node.create({'node': node});
         },
         function(error) {
-          return error.message === Util.paramMissingMessage('Node.create(channel, node)');
+          return error.message === Util.paramMissingMessage('Node.create({channel, node})');
+        },
+        'throws required parameters error'
+      );
+    }
+  );
+
+  test(
+    '.create(): try to create a node without being logged',
+
+    function() {
+      buddycloud.Auth.logout();
+
+      throws(
+        function() {
+          buddycloud.Node.create({'channel': channel, 'node': node});
+        },
+        function(error) {
+          return error.message === Util.notLoggedMessage();
         },
         'throws required parameters error'
       );

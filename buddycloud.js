@@ -417,10 +417,60 @@
     }
   };
 
-  buddycloud.Node = {
-    create: function(channel, node) {
+  buddycloud.Metadata = {
+    get: function(path) {
+      var channel = path.channel;
+      var node = path.node;
+
       if (!channel || !node) {
-        raiseError(buddycloud.config.paramMissingErr, ['Node.create(channel, node)']);
+        raiseError(buddycloud.config.paramMissingErr, ['Metadata.get({channel, node})']);
+      }
+
+      if (!ready()) {
+        raiseError(buddycloud.config.notLoggedErr);
+      }
+
+      var opt = {
+        url: apiUrl(channel, 'metadata', node),
+        type: 'GET',
+        headers: {'Accept': 'application/json'}
+      };
+
+      return ajax(opt);
+    },
+
+    update: function(path, metadata) {
+      var channel = path.channel;
+      var node = path.node;
+
+      if (!channel || !node || !metadata || !metadata.title || !metadata.description || !metadata.access_model || !metadata.default_affiliation) {
+        raiseError(buddycloud.config.paramMissingErr, ['Metadata.update({channel, node}, {title, description, access_model, default_affiliation})']);
+      }
+
+      if (!ready()) {
+        raiseError(buddycloud.config.notLoggedErr);
+      }
+
+      var opt = {
+        url: apiUrl(channel, 'metadata', node),
+        type: 'POST',
+        headers: {
+          'Authorization': authHeader()
+        },
+        data: JSON.stringify(metadata)
+      };
+
+      return ajax(opt);
+    }
+  };
+
+  buddycloud.Node = {
+    create: function(path) {
+      var channel = path.channel;
+      var node = path.node;
+
+      if (!channel || !node) {
+        raiseError(buddycloud.config.paramMissingErr, ['Node.create({channel, node})']);
       }
 
       if (!ready()) {

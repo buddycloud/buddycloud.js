@@ -9,7 +9,7 @@ $(document).ready(function() {
   };
   var channel = 'test@topics.TEST.COM';
 
-  module('buddycloud.channel', {
+  module('buddycloud.Channel', {
     setup: function() {
       Util.init(apiUrl, domain, user.jid, user.password);
       sinon.spy($, 'ajax');
