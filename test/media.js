@@ -25,22 +25,22 @@ $(document).ready(function() {
   }
 
   var metadata1 = {'id':'2SMgyf6j7FSqSvu5s0kl',
-                  'author':'test@buddycloud.org',
+                  'author':'test@TEST.COM',
                   'mimeType':'image/png',
                   'fileExtension':'png',
                   'shaChecksum':'8bc42cbef340facfegh768a7eae3de6fa6850e0c',
                   'fileSize':2048,
                   'height':100,'width':100,
-                  'entityId':'test@topics.buddycloud.org'};
+                  'entityId':'test@topics@TEST.COM'};
 
   var metadata2 = {'id':'SKp5f6j7FSq2Svu5s12Y',
-                  'author':'test@buddycloud.org',
+                  'author':'test@TEST.COM',
                   'mimeType':'image/jpeg',
                   'fileExtension':'jpeg',
                   'shaChecksum':'cfe81d68a7efa8bc42cbef340fa6850e0cae3de6',
                   'fileSize':3639247,
                   'height':3264,'width':2448,
-                  'entityId':'test@buddycloud.org'};
+                  'entityId':'test@TEST.COM'};
 
   // buddycloud.Media.get
 

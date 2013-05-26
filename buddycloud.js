@@ -437,4 +437,23 @@
     }
   };
 
+  buddycloud.Subscribed = {
+    get: function() {
+      if (!ready()) {
+        raiseError(buddycloud.config.notLoggedErr);
+      }
+
+      var opt = {
+        url: apiUrl('subscribed'),
+        type: 'GET',
+        headers: {
+          'Authorization': authHeader(),
+          'Accept': 'application/json'
+        }
+      };
+
+      return ajax(opt);
+    }
+  };
+
 }).call(this);
