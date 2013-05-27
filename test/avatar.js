@@ -59,7 +59,7 @@ $(document).ready(function() {
 
       buddycloud.Avatar.get(channel).done(function(data) {
         ok(true, 'avatar retrieved');
-      }).error(function() {
+      }).fail(function() {
         // Force fail
         ok(false, 'unexpected failure');
       }).always(function() {
@@ -89,7 +89,7 @@ $(document).ready(function() {
 
       buddycloud.Avatar.get(channel).done(function(data) {
         ok(false, 'unexpected success');
-      }).error(function() {
+      }).fail(function() {
         ok(true, 'avatar not found');
       }).always(function() {
         checkAjax(opt);
@@ -148,7 +148,7 @@ $(document).ready(function() {
 
       buddycloud.Avatar.set(channel, {'file': mediaFile}).done(function() {
         ok(true, 'avatar successfully uploaded');
-      }).error(function() {
+      }).fail(function() {
         // Force fail
         ok(false, 'unexpected failure');
       }).always(function() {
@@ -189,7 +189,7 @@ $(document).ready(function() {
 
       buddycloud.Avatar.set(channel, {'file': mediaFile, 'content-type': 'image/jpeg'}).done(function() {
         ok(true, 'avatar successfully uploaded');
-      }).error(function() {
+      }).fail(function() {
         // Force fail
         ok(false, 'unexpected failure');
       }).always(function() {
@@ -258,7 +258,7 @@ $(document).ready(function() {
 
       buddycloud.Avatar.remove(channel).done(function() {
         ok(true, 'avatar successfully deleted');
-      }).error(function() {
+      }).fail(function() {
         // Force fail
         ok(false, 'unexpected failure');
       }).always(function() {
@@ -291,7 +291,7 @@ $(document).ready(function() {
 
       buddycloud.Avatar.remove(channel).done(function() {
         ok(false, 'unexpected success');
-      }).error(function() {
+      }).fail(function() {
         ok(true, 'avatar not removed');
       }).always(function() {
         checkAjax(opt);

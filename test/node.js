@@ -41,7 +41,7 @@ $(document).ready(function() {
 
       buddycloud.Node.create({'channel': channel, 'node': node}).done(function() {
         ok(true, 'node created');
-      }).error(function() {
+      }).fail(function() {
         ok(false, 'unexpected failure');
       }).always(function() {
         checkAjax();
@@ -62,7 +62,7 @@ $(document).ready(function() {
 
       buddycloud.Node.create({'channel': channel, 'node': node}).done(function() {
         ok(false, 'unexpected success');
-      }).error(function() {
+      }).fail(function() {
         ok(true, 'node not created');
       }).always(function() {
         checkAjax();

@@ -40,7 +40,7 @@ $(document).ready(function() {
 
       buddycloud.Channel.create(channel).done(function() {
         ok(true, 'channel created');
-      }).error(function() {
+      }).fail(function() {
         ok(false, 'unexpected failure');
       }).always(function() {
         checkAjax();
@@ -61,7 +61,7 @@ $(document).ready(function() {
 
       buddycloud.Channel.create(channel).done(function() {
         ok(false, 'unexpected success');
-      }).error(function() {
+      }).fail(function() {
         ok(true, 'topic channel not created');
       }).always(function() {
         checkAjax();

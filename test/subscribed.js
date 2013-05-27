@@ -63,7 +63,7 @@ $(document).ready(function() {
 
       buddycloud.Subscribed.get().done(function(data) {
         equal(JSON.stringify(data), JSON.stringify(allSubscriptions), 'subscriptions successfully retrieved');
-      }).error(function() {
+      }).fail(function() {
         // Force fail
         ok(false, 'unexpected failure');
       }).always(function() {
@@ -97,7 +97,7 @@ $(document).ready(function() {
 
       buddycloud.Subscribed.get().done(function(data) {
         ok(false, 'unexpected success');
-      }).error(function() {
+      }).fail(function() {
         ok(true, 'wrong username or password');
       }).always(function() {
         checkAjax(opt);
@@ -150,7 +150,7 @@ $(document).ready(function() {
 
       buddycloud.Subscribed.update(subscriptions).done(function() {
         ok(true, 'subscriptions updated');
-      }).error(function() {
+      }).fail(function() {
         // Force fail
         ok(false, 'unexpected failure');
       }).always(function() {
@@ -184,7 +184,7 @@ $(document).ready(function() {
 
       buddycloud.Subscribed.update(subscriptions).done(function() {
         ok(false, 'unexpected success');
-      }).error(function() {
+      }).fail(function() {
         ok(true, 'subscriptions not updated');
       }).always(function() {
         checkAjax(opt);

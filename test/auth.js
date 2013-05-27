@@ -43,7 +43,7 @@ $(document).ready(function() {
 
       buddycloud.Auth.login(user.jid, user.password).done(function() {
         ok(false, 'unexpected success');
-      }).error(function() {
+      }).fail(function() {
         // Force fail
          equal(false, buddycloud.ready(), 'login failure');
       }).always(function() {
@@ -65,7 +65,7 @@ $(document).ready(function() {
 
       buddycloud.Auth.login(user.jid, user.password).done(function() {
         ok(buddycloud.ready(), 'successful login');
-      }).error(function() {
+      }).fail(function() {
         // Force fail
         ok(false, 'unexpected login error');
       }).always(function() {
@@ -104,7 +104,7 @@ $(document).ready(function() {
 
       buddycloud.Auth.login(user.jid, user.password).done(function() {
         ok(buddycloud.ready(), 'successful login');
-      }).error(function() {
+      }).fail(function() {
         // Force fail
         ok(false, 'unexpected login error');
       }).always(function() {

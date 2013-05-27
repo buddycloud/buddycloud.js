@@ -5,7 +5,7 @@
 
   buddycloud.VERSION = '0.0.1';
 
-  buddycloud.$ = root.jQuery || root.Zepto || root.ender || root.$;
+  buddycloud.$ = root.jQuery || root.$;
 
   function ajax(opt) {
     if (opt.headers && opt.headers['Authorization']) {
@@ -245,7 +245,7 @@
       var promise = ajax(opt);
       promise.done(function() {
         updateCredentials({'jid': jid, 'password': password});
-      }).error(function() {
+      }).fail(function() {
         reset();
       });
 

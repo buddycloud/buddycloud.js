@@ -67,7 +67,7 @@ $(document).ready(function() {
 
       buddycloud.Media.getMetadata(channel).done(function(data) {
         equal(JSON.stringify(data), JSON.stringify([metadata1, metadata2]), 'all media metadata successfully retrieved');
-      }).error(function() {
+      }).fail(function() {
         // Force fail
         ok(false, 'unexpected failure');
       }).always(function() {
@@ -103,7 +103,7 @@ $(document).ready(function() {
 
       buddycloud.Media.getMetadata(channel, params).done(function(data) {
         equal(JSON.stringify(data), JSON.stringify([metadata1, metadata2]), 'specified metadata successfully retrieved');
-      }).error(function() {
+      }).fail(function() {
         // Force fail
         ok(false, 'unexpected failure');
       }).always(function() {
@@ -138,7 +138,7 @@ $(document).ready(function() {
 
       buddycloud.Media.getMetadata(channel, params).done(function(data) {
         equal(JSON.stringify(data), JSON.stringify([metadata1, metadata2]), 'media metadata retrieved without parameters');
-      }).error(function() {
+      }).fail(function() {
         // Force fail
         ok(false, 'unexpected failure');
       }).always(function() {
@@ -177,7 +177,7 @@ $(document).ready(function() {
 
       buddycloud.Media.get({'channel': channel, 'mediaId': metadata1.id}).done(function() {
         ok(true, 'media successfully retrieved');
-      }).error(function() {
+      }).fail(function() {
         // Force fail
         ok(false, 'unexpected failure');
       }).always(function() {
@@ -210,7 +210,7 @@ $(document).ready(function() {
 
       buddycloud.Media.get({'channel': channel, 'mediaId': metadata1.id}).done(function() {
         ok(false, 'unexpected success');
-      }).error(function() {
+      }).fail(function() {
         ok(true, 'media not retrieved');
       }).always(function() {
         checkAjax(opt);
@@ -250,7 +250,7 @@ $(document).ready(function() {
 
       buddycloud.Media.get({'channel': channel, 'mediaId': metadata1.id}, params).done(function() {
         ok(true, 'media thumbnail successfully retrieved');
-      }).error(function() {
+      }).fail(function() {
         // Force fail
         ok(false, 'unexpected failure');
       }).always(function() {
@@ -291,7 +291,7 @@ $(document).ready(function() {
 
       buddycloud.Media.get({'channel': channel, 'mediaId': metadata1.id}, params).done(function() {
         ok(true, 'media thumbnail successfully retrieved');
-      }).error(function() {
+      }).fail(function() {
         // Force fail
         ok(false, 'unexpected failure');
       }).always(function() {
@@ -332,7 +332,7 @@ $(document).ready(function() {
 
       buddycloud.Media.get({'channel': channel, 'mediaId': metadata1.id}, params).done(function() {
         ok(true, 'media thumbnail successfully retrieved');
-      }).error(function() {
+      }).fail(function() {
         // Force fail
         ok(false, 'unexpected failure');
       }).always(function() {
@@ -392,7 +392,7 @@ $(document).ready(function() {
 
       buddycloud.Media.add(channel, {'file': mediaFile}).done(function() {
         ok(true, 'media successfully uploaded');
-      }).error(function() {
+      }).fail(function() {
         // Force fail
         ok(false, 'unexpected failure');
       }).always(function() {
@@ -433,7 +433,7 @@ $(document).ready(function() {
 
       buddycloud.Media.add(channel, {'file': mediaFile, 'content-type': 'image/jpeg'}).done(function() {
         ok(true, 'media successfully uploaded');
-      }).error(function() {
+      }).fail(function() {
         // Force fail
         ok(false, 'unexpected failure');
       }).always(function() {
@@ -502,7 +502,7 @@ $(document).ready(function() {
 
       buddycloud.Media.remove({'channel': channel, 'mediaId': metadata1.id}).done(function() {
         ok(true, 'media successfully deleted');
-      }).error(function() {
+      }).fail(function() {
         // Force fail
         ok(false, 'unexpected failure');
       }).always(function() {
@@ -535,7 +535,7 @@ $(document).ready(function() {
 
       buddycloud.Media.remove({'channel': channel, 'mediaId': metadata1.id}).done(function() {
         ok(false, 'unexpected success');
-      }).error(function() {
+      }).fail(function() {
         ok(true, 'media not removed');
       }).always(function() {
         checkAjax(opt);

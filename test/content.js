@@ -56,7 +56,7 @@ $(document).ready(function() {
 
       buddycloud.Content.get({'channel': channel, 'node': node}).done(function(data) {
         equal(JSON.stringify(data), JSON.stringify(responseContent), 'successful get');
-      }).error(function() {
+      }).fail(function() {
         ok(false, 'unexpected error');
       }).always(function() {
         checkAjax(opt);
@@ -88,7 +88,7 @@ $(document).ready(function() {
 
       buddycloud.Content.get({'channel': channel, 'node': node}).done(function(data) {
         equal(JSON.stringify(data), JSON.stringify(responseContent), 'successful content retrieve');
-      }).error(function() {
+      }).fail(function() {
         ok(false, 'unexpected error');
       }).always(function() {
         checkAjax(opt);
@@ -120,7 +120,7 @@ $(document).ready(function() {
 
       buddycloud.Content.get({'channel': channel, 'node': node}).done(function(data) {
         ok(false, 'unexpected success');
-      }).error(function() {
+      }).fail(function() {
         ok(true, 'error on get channel content');
       }).always(function() {
         checkAjax(opt);
@@ -152,7 +152,7 @@ $(document).ready(function() {
 
       buddycloud.Content.get({'channel': channel, 'node': node}, {abc: 1, 123: '000'}).done(function(data) {
         equal(JSON.stringify(data), JSON.stringify(responseContent), 'successful content retrieve without parameters');
-      }).error(function() {
+      }).fail(function() {
         ok(false, 'unexpected error');
       }).always(function() {
         checkAjax(opt);
@@ -185,7 +185,7 @@ $(document).ready(function() {
 
       buddycloud.Content.get({'channel': channel, 'node': node}, {max: 3, after: '000'}).done(function(data) {
         equal(JSON.stringify(data), JSON.stringify(responseContent), 'successful content retrieve with parameters');
-      }).error(function() {
+      }).fail(function() {
         ok(false, 'unexpected error');
       }).always(function() {
         checkAjax(opt);
@@ -218,7 +218,7 @@ $(document).ready(function() {
 
       buddycloud.Content.get({'channel': channel, 'node': node}, {max: 3}).done(function(data) {
         equal(JSON.stringify(data), JSON.stringify(responseContent), 'successful content retrieve with only max parameter');
-      }).error(function() {
+      }).fail(function() {
         ok(false, 'unexpected error');
       }).always(function() {
         checkAjax(opt);
@@ -250,7 +250,7 @@ $(document).ready(function() {
 
       buddycloud.Content.get({'channel': channel, 'node': node, 'item': itemId}).done(function(data) {
         equal(JSON.stringify(data), JSON.stringify(item), 'successful item retrieve');
-      }).error(function() {
+      }).fail(function() {
         ok(false, 'unexpected error');
       }).always(function() {
         checkAjax(opt);
@@ -282,7 +282,7 @@ $(document).ready(function() {
 
       buddycloud.Content.get({'channel': channel, 'node': node, 'item': itemId}).done(function(data) {
         equal(JSON.stringify(data), JSON.stringify(item), 'successful item retrieve without login');
-      }).error(function() {
+      }).fail(function() {
         ok(false, 'unexpected error');
       }).always(function() {
         checkAjax(opt);
@@ -314,7 +314,7 @@ $(document).ready(function() {
 
       buddycloud.Content.get({'channel': channel, 'node': node, 'item': itemId}, {max: 2}).done(function(data) {
         equal(JSON.stringify(data), JSON.stringify(item), 'successful item retrieve item without parameters');
-      }).error(function() {
+      }).fail(function() {
         ok(false, 'unexpected error');
       }).always(function() {
         checkAjax(opt);
@@ -365,7 +365,7 @@ $(document).ready(function() {
 
       buddycloud.Content.add({'channel': channel, 'node': node, 'content': itemContent}).done(function(data) {
         equal(JSON.stringify(data), JSON.stringify(item), 'item successfully appended to content');
-      }).error(function() {
+      }).fail(function() {
         ok(false, 'unexpected error');
       }).always(function() {
         checkAjax(opt);
@@ -399,7 +399,7 @@ $(document).ready(function() {
 
       buddycloud.Content.add({'channel': channel, 'node': node, 'content': itemContent}).done(function() {
         ok(false , 'unexpected success');
-      }).error(function() {
+      }).fail(function() {
         ok(true, 'item not appended to channel content');
       }).always(function() {
         checkAjax(opt);
@@ -467,7 +467,7 @@ $(document).ready(function() {
 
       buddycloud.Content.remove({'channel': channel, 'node': node, 'item': itemId}).done(function() {
         ok(true , 'item successfully deleted');
-      }).error(function() {
+      }).fail(function() {
         ok(false, 'unexpected error');
       }).always(function() {
         checkAjax(opt);
@@ -498,7 +498,7 @@ $(document).ready(function() {
 
       buddycloud.Content.remove({'channel': channel, 'node': node, 'item': itemId}).done(function() {
         ok(false , 'unexpected success');
-      }).error(function() {
+      }).fail(function() {
         ok(true, 'item not removed');
       }).always(function() {
         checkAjax(opt);

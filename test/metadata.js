@@ -52,7 +52,7 @@ $(document).ready(function() {
 
       buddycloud.Metadata.get({'channel': channel, 'node': node}).done(function(data) {
         equal(JSON.stringify(data), JSON.stringify(metadata), 'successful get');
-      }).error(function() {
+      }).fail(function() {
         ok(false, 'unexpected failure');
       }).always(function() {
         checkAjax(opt);
@@ -101,7 +101,7 @@ $(document).ready(function() {
 
       buddycloud.Metadata.update({'channel': channel, 'node': node}, metadata).done(function() {
         ok(true, 'metada updated');
-      }).error(function() {
+      }).fail(function() {
         ok(false, 'unexpected failure');
       }).always(function() {
         checkAjax(opt);
@@ -132,7 +132,7 @@ $(document).ready(function() {
 
       buddycloud.Metadata.update({'channel': channel, 'node': node}, metadata).done(function(data) {
         ok(false, 'unexpected success');
-      }).error(function(a, b) {
+      }).fail(function(a, b) {
         ok(true, 'metadata not updated');
       }).always(function() {
         checkAjax(opt);

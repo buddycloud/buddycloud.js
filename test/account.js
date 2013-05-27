@@ -41,7 +41,7 @@ $(document).ready(function() {
 
       buddycloud.Account.create(user).done(function() {
           ok(false, 'unexpected success');
-      }).error(function() {
+      }).fail(function() {
           ok(true, 'user not created');
       }).always(function() {
         checkAjax();
@@ -62,7 +62,7 @@ $(document).ready(function() {
 
       buddycloud.Account.create(user).done(function() {
           ok(true, 'user created');
-      }).error(function() {
+      }).fail(function() {
           // Force fail
           ok(false, 'unexpected error');
       }).always(function() {
