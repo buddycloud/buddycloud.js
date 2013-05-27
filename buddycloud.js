@@ -20,7 +20,7 @@
       return 'Basic ' + btoa(jid + ':' + password);
     }
 
-    return ready() ? 'Basic ' + btoa(buddycloud.config.jid + ':' + buddycloud.config.password) : null;
+    return ready() ? 'Basic ' + buddycloud.config.credentials : null;
   }
 
   function apiUrl() {
@@ -31,7 +31,7 @@
 
   function updateCredentials(credentials) {
     buddycloud.config.jid = credentials.jid;
-    buddycloud.config.password = credentials.password;
+    buddycloud.config.credentials = btoa(credentials.jid + ':' + credentials.password);
     buddycloud.config.email = credentials.email;
   }
 
@@ -111,11 +111,11 @@
   };
 
   var reset = function() {
-    updateCredentials({});
+    buddycloud.config.jid = buddycloud.config.credentials = buddycloud.config.email = null;
   };
 
   var ready = function() {
-    return buddycloud.config.jid && buddycloud.config.password ? true : false;
+    return buddycloud.config.jid && buddycloud.config.credentials ? true : false;
   };
 
   // Default configuration
@@ -123,7 +123,7 @@
     url: 'https://api.buddycloud.org',
     domain: 'buddycloud.org',
     jid: null,
-    password: null,
+    credentials: null,
     email: null,
 
     // Topic channels jid
