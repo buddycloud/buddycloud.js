@@ -60,8 +60,8 @@
 <p>To be able to handle actions that needs authentication, you must call the login method of the library. If the login is successful, the library stores your credentials (Base64 encoded) and you are ready to call methods that requires authentication.</p>
 
 <div class="highlight"><pre><span class="nx">buddycloud</span><span class="p">.</span><span class="nx">Auth</span><span class="p">.</span><span class="nx">login</span><span class="p">({</span>
-  <span class="nx">jid</span><span class="o">:</span> <span class="s1">'alice@buddycloud.org'</span><span class="p">,</span>
-  <span class="nx">password</span><span class="o">:</span> <span class="s1">'alice123'</span>
+  <span class="nx">jid</span><span class="o">:</span> <span class="s1">'sparkle@buddycloud.org'</span><span class="p">,</span>
+  <span class="nx">password</span><span class="o">:</span> <span class="s1">'sparkle123'</span>
 <span class="p">});</span>
 </pre></div>
 
@@ -70,9 +70,9 @@
 <h3>Create a new user account</h3>
 
 <div class="highlight"><pre><span class="nx">buddycloud</span><span class="p">.</span><span class="nx">Account</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
-  <span class="nx">jid</span><span class="o">:</span> <span class="s1">'bob@buddycloud'</span><span class="p">,</span>
-  <span class="nx">password</span><span class="o">:</span> <span class="s1">'bob456'</span><span class="p">,</span>
-  <span class="nx">email</span><span class="o">:</span> <span class="s1">'bob@email.com'</span>
+  <span class="nx">jid</span><span class="o">:</span> <span class="s1">'lyle@buddycloud'</span><span class="p">,</span>
+  <span class="nx">password</span><span class="o">:</span> <span class="s1">'lyle456'</span><span class="p">,</span>
+  <span class="nx">email</span><span class="o">:</span> <span class="s1">'lyle@dragons.com'</span>
 <span class="p">});</span>
 </pre></div>
 
@@ -85,8 +85,8 @@
 <p>For example, checking the result of a login request:</p>
 
 <div class="highlight"><pre><span class="nx">buddycloud</span><span class="p">.</span><span class="nx">Auth</span><span class="p">.</span><span class="nx">login</span><span class="p">({</span>
-  <span class="nx">jid</span><span class="o">:</span> <span class="s1">'alice@buddycloud.org'</span><span class="p">,</span> 
-  <span class="nx">password</span><span class="o">:</span> <span class="s1">'alice123'</span>
+  <span class="nx">jid</span><span class="o">:</span> <span class="s1">'sparkle@buddycloud.org'</span><span class="p">,</span> 
+  <span class="nx">password</span><span class="o">:</span> <span class="s1">'sparkle123'</span>
 <span class="p">}).</span><span class="nx">done</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
   <span class="nx">alert</span><span class="p">(</span><span class="s1">'Login successful!'</span><span class="p">);</span>
 <span class="p">}).</span><span class="nx">fail</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
@@ -99,7 +99,7 @@
 <h3>Getting a channel node's content</h3>
 
 <div class="highlight"><pre><span class="nx">buddycloud</span><span class="p">.</span><span class="nx">Content</span><span class="p">.</span><span class="nx">get</span><span class="p">({</span>
-  <span class="nx">channel</span><span class="o">:</span> <span class="s1">'alice@buddycloud.org'</span><span class="p">,</span>
+  <span class="nx">channel</span><span class="o">:</span> <span class="s1">'sparkle@buddycloud.org'</span><span class="p">,</span>
   <span class="nx">node</span><span class="o">:</span> <span class="s1">'posts'</span>
 <span class="p">}).</span><span class="nx">done</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
   <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
@@ -111,19 +111,19 @@
 <div class="highlight"><pre><span class="p">[</span>
   <span class="p">{</span>
     <span class="s2">"id"</span><span class="o">:</span> <span class="s2">"foo"</span><span class="p">,</span>
-    <span class="s2">"author"</span><span class="o">:</span> <span class="s2">"alice@example.com"</span><span class="p">,</span>
+    <span class="s2">"author"</span><span class="o">:</span> <span class="s2">"sparkle@example.com"</span><span class="p">,</span>
     <span class="s2">"updated"</span><span class="o">:</span> <span class="s2">"2013-06-01T12:00:00Z"</span><span class="p">,</span>
     <span class="s2">"content"</span><span class="o">:</span> <span class="s2">"buddycloud.js is awesome!"</span><span class="p">,</span>
   <span class="p">},</span>
   <span class="p">{</span>
     <span class="s2">"id"</span><span class="o">:</span> <span class="s2">"bar"</span><span class="p">,</span>
-    <span class="s2">"author"</span><span class="o">:</span> <span class="s2">"bob@example.com"</span><span class="p">,</span>
+    <span class="s2">"author"</span><span class="o">:</span> <span class="s2">"lyle@example.com"</span><span class="p">,</span>
     <span class="s2">"updated"</span><span class="o">:</span> <span class="s2">"2013-05-31T12:00:00Z"</span><span class="p">,</span>
-    <span class="s2">"content"</span><span class="o">:</span> <span class="s2">"Hey Alice! How are you?"</span><span class="p">,</span>
+    <span class="s2">"content"</span><span class="o">:</span> <span class="s2">"Hey Sparkle! How are you?"</span><span class="p">,</span>
   <span class="p">},</span>
   <span class="p">{</span>
     <span class="s2">"id"</span><span class="o">:</span> <span class="s2">"baz"</span><span class="p">,</span>
-    <span class="s2">"author"</span><span class="o">:</span> <span class="s2">"alice@example.com"</span><span class="p">,</span>
+    <span class="s2">"author"</span><span class="o">:</span> <span class="s2">"sparkle@example.com"</span><span class="p">,</span>
     <span class="s2">"updated"</span><span class="o">:</span> <span class="s2">"2013-05-30T12:00:00Z"</span><span class="p">,</span>
     <span class="s2">"content"</span><span class="o">:</span> <span class="s2">"Feeling good today!"</span><span class="p">,</span>
   <span class="p">}</span>
@@ -133,7 +133,7 @@
 <p>You can also retrieve a specific item:</p>
 
 <div class="highlight"><pre><span class="nx">buddycloud</span><span class="p">.</span><span class="nx">Content</span><span class="p">.</span><span class="nx">get</span><span class="p">({</span>
-  <span class="nx">channel</span><span class="o">:</span> <span class="s1">'alice@buddycloud.org'</span><span class="p">,</span>
+  <span class="nx">channel</span><span class="o">:</span> <span class="s1">'sparkle@buddycloud.org'</span><span class="p">,</span>
   <span class="nx">node</span><span class="o">:</span> <span class="s1">'posts'</span><span class="p">,</span>
   <span class="nx">item</span><span class="o">:</span> <span class="s1">'foo'</span>
 <span class="p">}).</span><span class="nx">done</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
@@ -145,7 +145,7 @@
 
 <div class="highlight"><pre><span class="p">{</span>
   <span class="s2">"id"</span><span class="o">:</span> <span class="s2">"foo"</span><span class="p">,</span>
-  <span class="s2">"author"</span><span class="o">:</span> <span class="s2">"alice@example.com"</span><span class="p">,</span>
+  <span class="s2">"author"</span><span class="o">:</span> <span class="s2">"sparkle@example.com"</span><span class="p">,</span>
   <span class="s2">"updated"</span><span class="o">:</span> <span class="s2">"2013-06-01T12:00:00Z"</span><span class="p">,</span>
   <span class="s2">"content"</span><span class="o">:</span> <span class="s2">"buddycloud.js is awesome!"</span><span class="p">,</span>
 <span class="p">}</span>
@@ -154,9 +154,9 @@
 <h3>Adding new content to a channel's node</h3>
 
 <div class="highlight"><pre><span class="nx">buddycloud</span><span class="p">.</span><span class="nx">Content</span><span class="p">.</span><span class="nx">add</span><span class="p">({</span>
-  <span class="nx">channel</span><span class="o">:</span> <span class="s1">'alice@buddycloud.org'</span><span class="p">,</span>
+  <span class="nx">channel</span><span class="o">:</span> <span class="s1">'sparkle@buddycloud.org'</span><span class="p">,</span>
   <span class="nx">node</span><span class="o">:</span> <span class="s1">'posts'</span><span class="p">,</span>
-  <span class="nx">content</span><span class="o">:</span> <span class="s1">'buddycloud is an awesome social backend, and is federated!'</span>
+  <span class="nx">content</span><span class="o">:</span> <span class="s1">'buddycloud is an awesome social back-end, and is federated!'</span>
 <span class="p">});</span>
 </pre></div>
 
@@ -179,7 +179,7 @@
 <div class="highlight"><pre><span class="p">{</span>
   <span class="s2">"id"</span><span class="o">:</span><span class="s2">"f00"</span><span class="p">,</span>
   <span class="s2">"fileName"</span><span class="o">:</span><span class="s2">"tom.jpg"</span><span class="p">,</span>
-  <span class="s2">"author"</span><span class="o">:</span><span class="s2">"alice@buddycloud.org"</span><span class="p">,</span>
+  <span class="s2">"author"</span><span class="o">:</span><span class="s2">"sparkle@buddycloud.org"</span><span class="p">,</span>
   <span class="s2">"title"</span><span class="o">:</span><span class="s2">"My cat Tom"</span><span class="p">,</span>
   <span class="s2">"mimeType"</span><span class="o">:</span><span class="s2">"image/jpeg"</span><span class="p">,</span>
   <span class="s2">"description"</span><span class="o">:</span><span class="s2">"Chasing Jerry!"</span><span class="p">,</span>
