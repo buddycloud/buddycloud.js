@@ -1,0 +1,245 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>buddycloud.js by buddycloud</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>buddycloud.js</h1>
+        <p>It is like magic, but it is technology.</p>
+
+        <p class="view"><a href="https://github.com/buddycloud/buddycloud.js">View the Project on GitHub <small>buddycloud/buddycloud.js</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/buddycloud/buddycloud.js/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/buddycloud/buddycloud.js/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/buddycloud/buddycloud.js">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h2>Overview</h2>
+
+<p>buddycloud.js is a library that enables developers to quickly build social features in their JavaScript projects.</p>
+
+<p>For more information about buddycloud, visit <a href="http://buddycloud.com/">buddycloud.com</a>.</p>
+
+<h2>Getting started</h2>
+
+<h3>Include buddycloud.js</h3>
+
+<div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"buddycloud.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+</pre></div>
+
+<p>buddycloud.js's only hard dependency is jQuery ( &gt;= 1.5).</p>
+
+<h3>Initialize</h3>
+
+<p>To start using the library, you need to initialize it passing the URL for the API that you going tu use, and your buddycloud domain.</p>
+
+<div class="highlight"><pre><span class="nx">buddycloud</span><span class="p">.</span><span class="nx">init</span><span class="p">({</span>
+  <span class="nx">apiUrl</span><span class="o">:</span> <span class="s1">'https://api.buddycloud.org'</span><span class="p">,</span>
+  <span class="nx">domain</span><span class="o">:</span> <span class="s1">'buddycloud.org'</span>
+<span class="p">});</span>
+</pre></div>
+
+<p>By default, the library is already configured to point to buddycloud main API and domain.</p>
+
+<h3>Login</h3>
+
+<p>To be able to handle actions that needs authentication, you must call the login method of the library. If the login is successful, the library stores your credentials (Base64 encoded) and you are ready to call methods that requires authentication.</p>
+
+<div class="highlight"><pre><span class="nx">buddycloud</span><span class="p">.</span><span class="nx">Auth</span><span class="p">.</span><span class="nx">login</span><span class="p">({</span>
+  <span class="nx">jid</span><span class="o">:</span> <span class="s1">'alice@buddycloud.org'</span><span class="p">,</span>
+  <span class="nx">password</span><span class="o">:</span> <span class="s1">'alice123'</span>
+<span class="p">});</span>
+</pre></div>
+
+<p>The library only handles <strong>one</strong> logged user per time.</p>
+
+<h3>Create a new user account</h3>
+
+<div class="highlight"><pre><span class="nx">buddycloud</span><span class="p">.</span><span class="nx">Account</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+  <span class="nx">jid</span><span class="o">:</span> <span class="s1">'bob@buddycloud'</span><span class="p">,</span>
+  <span class="nx">password</span><span class="o">:</span> <span class="s1">'bob456'</span><span class="p">,</span>
+  <span class="nx">email</span><span class="o">:</span> <span class="s1">'bob@email.com'</span>
+<span class="p">});</span>
+</pre></div>
+
+<p>Once the user is successfully created, the library stores its credentials and no login is needed.</p>
+
+<h3>Ajax and promises</h3>
+
+<p>buddycloud.js uses <a href="http://api.jquery.com/jQuery.ajax/">jQuery.ajax()</a> to make HTTP requests. Every <em>$.ajax()</em> request returns a jqXHR object that implements a Promise interface (check <a href="http://api.jquery.com/category/deferred-object/">Deferred objects</a> for more information) and can be used to verify requests results using <em>.done()</em>, <em>.fail()</em> and <em>.then()</em> methods.</p>
+
+<p>For example, checking the result of a login request:</p>
+
+<div class="highlight"><pre><span class="nx">buddycloud</span><span class="p">.</span><span class="nx">Auth</span><span class="p">.</span><span class="nx">login</span><span class="p">({</span>
+  <span class="nx">jid</span><span class="o">:</span> <span class="s1">'alice@buddycloud.org'</span><span class="p">,</span> 
+  <span class="nx">password</span><span class="o">:</span> <span class="s1">'alice123'</span>
+<span class="p">}).</span><span class="nx">done</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">alert</span><span class="p">(</span><span class="s1">'Login successful!'</span><span class="p">);</span>
+<span class="p">}).</span><span class="nx">fail</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">alert</span><span class="p">(</span><span class="s1">'Oops, something went wrong.'</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+
+<h2>Usage example</h2>
+
+<h3>Getting a channel node's content</h3>
+
+<div class="highlight"><pre><span class="nx">buddycloud</span><span class="p">.</span><span class="nx">Content</span><span class="p">.</span><span class="nx">get</span><span class="p">({</span>
+  <span class="nx">channel</span><span class="o">:</span> <span class="s1">'alice@buddycloud.org'</span><span class="p">,</span>
+  <span class="nx">node</span><span class="o">:</span> <span class="s1">'posts'</span>
+<span class="p">}).</span><span class="nx">done</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+
+<p>Result:</p>
+
+<div class="highlight"><pre><span class="p">[</span>
+  <span class="p">{</span>
+    <span class="s2">"id"</span><span class="o">:</span> <span class="s2">"foo"</span><span class="p">,</span>
+    <span class="s2">"author"</span><span class="o">:</span> <span class="s2">"alice@example.com"</span><span class="p">,</span>
+    <span class="s2">"updated"</span><span class="o">:</span> <span class="s2">"2013-06-01T12:00:00Z"</span><span class="p">,</span>
+    <span class="s2">"content"</span><span class="o">:</span> <span class="s2">"buddycloud.js is awesome!"</span><span class="p">,</span>
+  <span class="p">},</span>
+  <span class="p">{</span>
+    <span class="s2">"id"</span><span class="o">:</span> <span class="s2">"bar"</span><span class="p">,</span>
+    <span class="s2">"author"</span><span class="o">:</span> <span class="s2">"bob@example.com"</span><span class="p">,</span>
+    <span class="s2">"updated"</span><span class="o">:</span> <span class="s2">"2013-05-31T12:00:00Z"</span><span class="p">,</span>
+    <span class="s2">"content"</span><span class="o">:</span> <span class="s2">"Hey Alice! How are you?"</span><span class="p">,</span>
+  <span class="p">},</span>
+  <span class="p">{</span>
+    <span class="s2">"id"</span><span class="o">:</span> <span class="s2">"baz"</span><span class="p">,</span>
+    <span class="s2">"author"</span><span class="o">:</span> <span class="s2">"alice@example.com"</span><span class="p">,</span>
+    <span class="s2">"updated"</span><span class="o">:</span> <span class="s2">"2013-05-30T12:00:00Z"</span><span class="p">,</span>
+    <span class="s2">"content"</span><span class="o">:</span> <span class="s2">"Feeling good today!"</span><span class="p">,</span>
+  <span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+
+<p>You can also retrieve a specific item:</p>
+
+<div class="highlight"><pre><span class="nx">buddycloud</span><span class="p">.</span><span class="nx">Content</span><span class="p">.</span><span class="nx">get</span><span class="p">({</span>
+  <span class="nx">channel</span><span class="o">:</span> <span class="s1">'alice@buddycloud.org'</span><span class="p">,</span>
+  <span class="nx">node</span><span class="o">:</span> <span class="s1">'posts'</span><span class="p">,</span>
+  <span class="nx">item</span><span class="o">:</span> <span class="s1">'foo'</span>
+<span class="p">}).</span><span class="nx">done</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+
+<p>Result:</p>
+
+<div class="highlight"><pre><span class="p">{</span>
+  <span class="s2">"id"</span><span class="o">:</span> <span class="s2">"foo"</span><span class="p">,</span>
+  <span class="s2">"author"</span><span class="o">:</span> <span class="s2">"alice@example.com"</span><span class="p">,</span>
+  <span class="s2">"updated"</span><span class="o">:</span> <span class="s2">"2013-06-01T12:00:00Z"</span><span class="p">,</span>
+  <span class="s2">"content"</span><span class="o">:</span> <span class="s2">"buddycloud.js is awesome!"</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+
+<h3>Adding new content to a channel's node</h3>
+
+<div class="highlight"><pre><span class="nx">buddycloud</span><span class="p">.</span><span class="nx">Content</span><span class="p">.</span><span class="nx">add</span><span class="p">({</span>
+  <span class="nx">channel</span><span class="o">:</span> <span class="s1">'alice@buddycloud.org'</span><span class="p">,</span>
+  <span class="nx">node</span><span class="o">:</span> <span class="s1">'posts'</span><span class="p">,</span>
+  <span class="nx">content</span><span class="o">:</span> <span class="s1">'buddycloud is an awesome social backend, and is federated!'</span>
+<span class="p">});</span>
+</pre></div>
+
+<h3>Uploading media files to a channel</h3>
+
+<p>buddycloud also supports media handling.</p>
+
+<div class="highlight"><pre><span class="nx">buddycloud</span><span class="p">.</span><span class="nx">Media</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s1">'cats@topics.buddycloud.org'</span><span class="p">,</span> <span class="p">{</span>
+  <span class="nx">file</span><span class="o">:</span> <span class="nx">mediaFile</span><span class="p">,</span>
+  <span class="nx">filename</span><span class="o">:</span> <span class="s1">'tom.jpg'</span><span class="p">,</span>
+  <span class="nx">title</span><span class="o">:</span> <span class="s1">'My cat Tom'</span><span class="p">,</span>
+  <span class="nx">description</span><span class="o">:</span> <span class="s1">'Chasing Jerry!'</span>
+<span class="p">}).</span><span class="nx">done</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+
+<p>Result:</p>
+
+<div class="highlight"><pre><span class="p">{</span>
+  <span class="s2">"id"</span><span class="o">:</span><span class="s2">"f00"</span><span class="p">,</span>
+  <span class="s2">"fileName"</span><span class="o">:</span><span class="s2">"tom.jpg"</span><span class="p">,</span>
+  <span class="s2">"author"</span><span class="o">:</span><span class="s2">"alice@buddycloud.org"</span><span class="p">,</span>
+  <span class="s2">"title"</span><span class="o">:</span><span class="s2">"My cat Tom"</span><span class="p">,</span>
+  <span class="s2">"mimeType"</span><span class="o">:</span><span class="s2">"image/jpeg"</span><span class="p">,</span>
+  <span class="s2">"description"</span><span class="o">:</span><span class="s2">"Chasing Jerry!"</span><span class="p">,</span>
+  <span class="s2">"fileExtension"</span><span class="o">:</span><span class="s2">"jpg"</span><span class="p">,</span>
+  <span class="s2">"shaChecksum"</span><span class="o">:</span><span class="s2">"bc46e5fac2f1cbb607c8b253a5af33181f161562"</span><span class="p">,</span>
+  <span class="s2">"fileSize"</span><span class="o">:</span><span class="mi">60892</span><span class="p">,</span>
+  <span class="s2">"height"</span><span class="o">:</span><span class="mi">312</span><span class="p">,</span>
+  <span class="s2">"width"</span><span class="o">:</span><span class="mi">312</span><span class="p">,</span>
+  <span class="s2">"entityId"</span><span class="o">:</span><span class="s2">"channel@topics.domain.com"</span>
+<span class="p">}</span>
+</pre></div>
+
+<h3>Retrieving media files</h3>
+
+<div class="highlight"><pre><span class="nx">buddycloud</span><span class="p">.</span><span class="nx">Media</span><span class="p">.</span><span class="nx">get</span><span class="p">({</span>
+  <span class="nx">channel</span><span class="o">:</span> <span class="s1">'cats@topics.buddycloud.org'</span><span class="p">,</span>
+  <span class="nx">mediaId</span><span class="o">:</span> <span class="s1">'f00'</span>
+<span class="p">}).</span><span class="nx">done</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">alert</span><span class="p">(</span><span class="s1">'Media retrieved!'</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+
+<p>You can also request a resized image using the <em>maxheight</em> and <em>maxwidth</em> parameters:</p>
+
+<div class="highlight"><pre><span class="nx">buddycloud</span><span class="p">.</span><span class="nx">Media</span><span class="p">.</span><span class="nx">get</span><span class="p">({</span>
+  <span class="nx">channel</span><span class="o">:</span> <span class="s1">'cats@topics.buddycloud.org'</span><span class="p">,</span>
+  <span class="nx">mediaId</span><span class="o">:</span> <span class="s1">'f00'</span>
+<span class="p">},</span> <span class="p">{</span>
+  <span class="nx">maxheight</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span>
+  <span class="nx">maxwidth</span><span class="o">:</span> <span class="mi">100</span>
+<span class="p">}).</span><span class="nx">done</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">alert</span><span class="p">(</span><span class="s1">'Media thumbnail retrieved!'</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+
+<h3>Bugs and issues</h3>
+
+<p>Please report these on the Github page - at <a href="https://github.com/buddycloud/buddycloud.js">github.com/buddycloud/buddycloud.js</a>.
+New contributions to the library are welcome.</p>
+
+<h3>License</h3>
+
+<p>buddycloud.js is open source and available under <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License 2.0</a>. </p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/buddycloud">buddycloud</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-1075750-2");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
