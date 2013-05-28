@@ -587,4 +587,29 @@
     }
   };
 
+  buddycloud.Subscribers = {
+    get: function(path) {
+      var channel = path.channel;
+      var node = path.node;
+
+      if (!channel || !node) {
+        raiseError(buddycloud.config.paramMissingErr, ['Subscribers.get({channel, node})']);
+      }
+
+      var opt = {
+        url: apiUrl(channel, 'subscribers', node),
+        type: 'GET',
+        headers: {
+          'Accept': 'application/json'
+        }
+      };
+
+      if (ready()) {
+        opt.headers['Authorization'] = authHeader();
+      }
+
+      return ajax(opt);
+    }
+  };
+
 }).call(this);
