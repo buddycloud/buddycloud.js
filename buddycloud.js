@@ -612,4 +612,37 @@
     }
   };
 
+  buddycloud.Sync = {
+    get: function(params) {
+      var node = params.node;
+      var since = params.since;
+      var max = params.max;
+      var counters = params.counters;
+
+      if (!node || !since || !max) {
+        raiseError(buddycloud.config.paramMissingErr, ['Sync.get({node, since, max[, counters]})']);
+      }
+
+      if (!ready()) {
+        raiseError(buddycloud.config.notLoggedErr);
+      }
+
+      var opt = {
+        url: apiUrl(node, 'sync'),
+        type: 'GET',
+        headers: {
+          'Authorization': authHeader(),
+          'Accept': 'application/json'
+        },
+        data: {'since': since, 'max': max}
+      };
+
+      if (counters && (counters === true || counters === 'true')) {
+        opt.data.counters = counters;
+      }
+
+      return ajax(opt);
+    }
+  };
+
 }).call(this);
