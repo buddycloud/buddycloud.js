@@ -41,7 +41,7 @@ $(document).ready(function() {
       server.respondWith('GET', apiUrl,
                          [401, {'Content-Type': 'text/plain'}, 'Unauthorized']);
 
-      buddycloud.Auth.login(user.jid, user.password).done(function() {
+      buddycloud.Auth.login(user).done(function() {
         ok(false, 'unexpected success');
       }).fail(function() {
         // Force fail
@@ -63,7 +63,7 @@ $(document).ready(function() {
       server.respondWith('GET', apiUrl,
                          [204, {'Content-Type': 'text/plain'}, 'No content']);
 
-      buddycloud.Auth.login(user.jid, user.password).done(function() {
+      buddycloud.Auth.login(user).done(function() {
         ok(buddycloud.ready(), 'successful login');
       }).fail(function() {
         // Force fail
@@ -85,7 +85,23 @@ $(document).ready(function() {
           buddycloud.Auth.login({jid: 'jid'});
         },
         function(error) {
-          return error.message === Util.paramMissingMessage('Auth.login(jid, password)');
+          return error.message === Util.paramMissingMessage('Auth.login({jid, password})');
+        },
+        'throws required parameters error'
+      );
+    }
+  );
+
+  test(
+    '.login(): using no parameters',
+
+    function() {
+      throws(
+        function() {
+          buddycloud.Auth.login();
+        },
+        function(error) {
+          return error.message === Util.paramMissingMessage('Auth.login({jid, password})');
         },
         'throws required parameters error'
       );
@@ -94,24 +110,13 @@ $(document).ready(function() {
 
   // buddycloud.Auth.logout()
   test(
-    '.login(): successful login',
+    '.logout(): successful logout',
 
     function() {
-      // Mock HTTP API server
-      var server = this.sandbox.useFakeServer();
-      server.respondWith('GET', apiUrl,
-                         [204, {'Content-Type': 'text/plain'}, 'No content']);
-
-      buddycloud.Auth.login(user.jid, user.password).done(function() {
-        ok(buddycloud.ready(), 'successful login');
-      }).fail(function() {
-        // Force fail
-        ok(false, 'unexpected login error');
-      }).always(function() {
-        checkAjax();
-      });
-
-      server.respond();
+      Util.init(apiUrl, domain, user);
+      equal(true, buddycloud.ready(), 'should be ready');
+      buddycloud.Auth.logout();
+      equal(false, buddycloud.ready(), 'should not be ready');
     }
   );
 });

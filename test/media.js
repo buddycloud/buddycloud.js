@@ -11,7 +11,7 @@ $(document).ready(function() {
 
   module('buddycloud.Media', {
     setup: function() {
-      Util.init(apiUrl, domain, user.jid, user.password);
+      Util.init(apiUrl, domain, user);
       sinon.spy($, 'ajax');
     },
     teardown: function() {
@@ -359,6 +359,22 @@ $(document).ready(function() {
     }
   );
 
+  test(
+    '.get(): using no parameters',
+
+    function() {
+      throws(
+        function() {
+          buddycloud.Media.get();
+        },
+        function(error) {
+          return error.message === Util.paramMissingMessage('Media.get({channel, mediaId}[, {maxheight, maxwidth}])');
+        },
+        'throws required parameters error'
+      );
+    }
+  );
+
   // buddycloud.Media.add
 
   function blobFile() {
@@ -461,6 +477,22 @@ $(document).ready(function() {
   );
 
   test(
+    '.add(): using no parameters',
+
+    function() {
+      throws(
+        function() {
+          buddycloud.Media.add();
+        },
+        function(error) {
+          return error.message === Util.paramMissingMessage('Media.add(channel, {file[, content-type, filename, title]})');
+        },
+        'throws required parameters error'
+      );
+    }
+  );
+
+  test(
     '.add(): try to upload media without being logged',
 
     function() {
@@ -552,6 +584,22 @@ $(document).ready(function() {
       throws(
         function() {
           buddycloud.Media.remove({'channel': channel});
+        },
+        function(error) {
+          return error.message === Util.paramMissingMessage('Media.remove({channel, mediaId})');
+        },
+        'throws required parameters error'
+      );
+    }
+  );
+
+  test(
+    '.remove(): using no parameters',
+
+    function() {
+      throws(
+        function() {
+          buddycloud.Media.remove();
         },
         function(error) {
           return error.message === Util.paramMissingMessage('Media.remove({channel, mediaId})');

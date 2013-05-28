@@ -35,6 +35,23 @@
     buddycloud.config.email = credentials.email;
   }
 
+  function checkObject() {
+    var args = Array.prototype.slice.call(arguments);
+    var object = args.shift();
+    if (!object) return false;
+
+    var property = args.shift();
+    while (property) {
+      if (!object[property]) {
+        return false;
+      }
+
+      property = args.shift();
+    }
+
+    return true;
+  }
+
   function insertValidParameters() {
     var args = Array.prototype.slice.call(arguments);
     var options = args.shift();
@@ -140,7 +157,7 @@
 
   buddycloud.Account = {
     create: function(credentials) {
-      if (!credentials.jid || !credentials.password || !credentials.email) {
+      if (!checkObject(credentials, 'jid', 'password', 'email')) {
         raiseError(buddycloud.config.paramMissingErr, ['Account.create({jid, password, email})']);
       }
 
@@ -184,7 +201,7 @@
     },
 
     set: function(channel, media) {
-      if (!channel || !media || !media.file) {
+      if (!channel || !checkObject(media, 'file')) {
         raiseError(buddycloud.config.paramMissingErr, ['Avatar.set(channel, {file[, content-type, filename, title]})']);
       }
 
@@ -231,10 +248,13 @@
   };
 
   buddycloud.Auth = {
-    login: function(jid, password) {
-      if (!jid || !password) {
-        raiseError(buddycloud.config.paramMissingErr, ['Auth.login(jid, password)']);
+    login: function(credentials) {
+      if (!checkObject(credentials, 'jid', 'password')) {
+        raiseError(buddycloud.config.paramMissingErr, ['Auth.login({jid, password})']);
       }
+
+      var jid = credentials.jid;
+      var password = credentials.password;
 
       var opt = {
         url: apiUrl(),
@@ -289,13 +309,13 @@
 
   buddycloud.Content = {
     get: function(path, params) {
+      if (!checkObject(path, 'channel', 'node')) {
+        raiseError(buddycloud.config.paramMissingErr, ['Content.get({channel, node[, item]}[, {max, after}])']);
+      }
+
       var channel = path.channel;
       var node = path.node;
       var item = path.item || '';
-
-      if (!channel || !node) {
-        raiseError(buddycloud.config.paramMissingErr, ['Content.get({channel, node[, item]}[, {max, after}])']);
-      }
 
       var opt = {
         url: apiUrl(channel, 'content', node, item),
@@ -319,17 +339,17 @@
     },
 
     add: function(item) {
-      var channel = item.channel;
-      var node = item.node;
-      var content = item.content;
-
-      if (!channel || !node || !content) {
+      if (!checkObject(item, 'channel', 'node', 'content')) {
         raiseError(buddycloud.config.paramMissingErr, ['Content.add({channel, node, content})']);
       }
 
       if (!ready()) {
         raiseError(buddycloud.config.notLoggedErr);
       }
+
+      var channel = item.channel;
+      var node = item.node;
+      var content = item.content;
 
       var opt = {
         url: apiUrl(channel, 'content', node),
@@ -346,17 +366,17 @@
     },
 
     remove: function(path) {
-      var channel = path.channel;
-      var node = path.node;
-      var item = path.item;
-
-      if (!channel || !node || !item) {
+      if (!checkObject(path, 'channel', 'node', 'item')) {
         raiseError(buddycloud.config.paramMissingErr, ['Content.remove({channel, node, item})']);
       }
 
       if (!ready()) {
         raiseError(buddycloud.config.notLoggedErr);
       }
+
+      var channel = path.channel;
+      var node = path.node;
+      var item = path.item;
 
       var opt = {
         url: apiUrl(channel, 'content', node, item),
@@ -396,12 +416,12 @@
     },
 
     get: function(media, params) {
-      var channel = media.channel;
-      var mediaId = media.mediaId;
-
-      if (!channel || !mediaId) {
+      if (!checkObject(media, 'channel', 'mediaId')) {
         raiseError(buddycloud.config.paramMissingErr, ['Media.get({channel, mediaId}[, {maxheight, maxwidth}])']);
       }
+
+      var channel = media.channel;
+      var mediaId = media.mediaId;
 
       var opt = {
         url: apiUrl(channel, 'media', mediaId),
@@ -420,7 +440,7 @@
     },
 
     add: function(channel, media) {
-      if (!channel || !media || !media.file) {
+      if (!channel || !checkObject(media, 'file')) {
         raiseError(buddycloud.config.paramMissingErr, ['Media.add(channel, {file[, content-type, filename, title]})']);
       }
 
@@ -458,16 +478,16 @@
     },
 
     remove: function(media) {
-      var channel = media.channel;
-      var mediaId = media.mediaId;
-
-      if (!channel || !mediaId) {
+      if (!checkObject(media, 'channel', 'mediaId')) {
         raiseError(buddycloud.config.paramMissingErr, ['Media.remove({channel, mediaId})']);
       }
 
       if (!ready()) {
         raiseError(buddycloud.config.notLoggedErr);
       }
+
+      var channel = media.channel;
+      var mediaId = media.mediaId;
 
       var opt = {
         url: apiUrl(channel, 'media', mediaId),
@@ -483,16 +503,16 @@
 
   buddycloud.Metadata = {
     get: function(path) {
-      var channel = path.channel;
-      var node = path.node;
-
-      if (!channel || !node) {
+      if (!checkObject(path, 'channel', 'node')) {
         raiseError(buddycloud.config.paramMissingErr, ['Metadata.get({channel, node})']);
       }
 
       if (!ready()) {
         raiseError(buddycloud.config.notLoggedErr);
       }
+
+      var channel = path.channel;
+      var node = path.node;
 
       var opt = {
         url: apiUrl(channel, 'metadata', node),
@@ -504,16 +524,16 @@
     },
 
     update: function(path, metadata) {
-      var channel = path.channel;
-      var node = path.node;
-
-      if (!channel || !node || !metadata || !metadata.title || !metadata.description || !metadata.access_model || !metadata.default_affiliation) {
+      if (!checkObject(path, 'channel', 'node') || !checkObject(metadata, 'title', 'description', 'access_model', 'default_affiliation')) {
         raiseError(buddycloud.config.paramMissingErr, ['Metadata.update({channel, node}, {title, description, access_model, default_affiliation})']);
       }
 
       if (!ready()) {
         raiseError(buddycloud.config.notLoggedErr);
       }
+
+      var channel = path.channel;
+      var node = path.node;
 
       var opt = {
         url: apiUrl(channel, 'metadata', node),
@@ -530,10 +550,7 @@
 
   buddycloud.Node = {
     create: function(path) {
-      var channel = path.channel;
-      var node = path.node;
-
-      if (!channel || !node) {
+      if (!checkObject(path, 'channel', 'node')) {
         raiseError(buddycloud.config.paramMissingErr, ['Node.create({channel, node})']);
       }
 
@@ -541,10 +558,62 @@
         raiseError(buddycloud.config.notLoggedErr);
       }
 
+      var channel = path.channel;
+      var node = path.node;
+
       var opt = {
         url: apiUrl(channel, node),
         type: 'POST',
         headers: {'Authorization': authHeader()}
+      };
+
+      return ajax(opt);
+    }
+  };
+
+  buddycloud.NotificationSettings = {
+    get: function(type) {
+      if (!type) {
+        raiseError(buddycloud.config.paramMissingErr, ['NotificationSettings.get(type)']);
+      }
+
+      if (!ready()) {
+        raiseError(buddycloud.config.notLoggedErr);
+      }
+
+      var opt = {
+        url: apiUrl('notification_settings'),
+        type: 'GET',
+        headers: {
+          'Authorization': authHeader(),
+          'Accept': 'application/json'
+        },
+        data: {'type': type}
+      };
+
+      return ajax(opt);
+    },
+
+    update: function(settings) {
+      if (!checkObject(settings, 'type', 'target', 'postAfterMe', 'postMentionedMe', 'postOnMyChannel',
+        'postOnSubscribedChannel', 'followMyChannel', 'followRequest')) {
+
+        raiseError(buddycloud.config.paramMissingErr, ['NotificationSettings.update({type, target, postAfterMe,' +
+        ' postMentionedMe, postOnMyChannel, postOnSubscribedChannel, followMyChannel, followRequest})']);
+      }
+
+      if (!ready()) {
+        raiseError(buddycloud.config.notLoggedErr);
+      }
+
+      var opt = {
+        url: apiUrl('notification_settings'),
+        type: 'POST',
+        headers: {
+          'Authorization': authHeader(),
+          'Accept': 'application/json'
+        },
+        data: JSON.stringify(settings)
       };
 
       return ajax(opt);
@@ -566,10 +635,14 @@
         }
       };
 
-      return ajax(opt);
+      return ajax(opt);subsc
     },
 
     update: function(subscriptions) {
+      if (!subscriptions) {
+        raiseError(buddycloud.config.paramMissingErr, ['Subscribed.update(subscriptions)']);
+      }
+
       if (!ready()) {
         raiseError(buddycloud.config.notLoggedErr);
       }
@@ -589,12 +662,12 @@
 
   buddycloud.Subscribers = {
     get: function(path) {
-      var channel = path.channel;
-      var node = path.node;
-
-      if (!channel || !node) {
+      if (!checkObject(path, 'channel', 'node')) {
         raiseError(buddycloud.config.paramMissingErr, ['Subscribers.get({channel, node})']);
       }
+
+      var channel = path.channel;
+      var node = path.node;
 
       var opt = {
         url: apiUrl(channel, 'subscribers', node),
@@ -614,18 +687,18 @@
 
   buddycloud.Sync = {
     get: function(params) {
-      var node = params.node;
-      var since = params.since;
-      var max = params.max;
-      var counters = params.counters;
-
-      if (!node || !since || !max) {
+      if (!checkObject(params, 'node', 'since', 'max')) {
         raiseError(buddycloud.config.paramMissingErr, ['Sync.get({node, since, max[, counters]})']);
       }
 
       if (!ready()) {
         raiseError(buddycloud.config.notLoggedErr);
       }
+
+      var node = params.node;
+      var since = params.since;
+      var max = params.max;
+      var counters = params.counters;
 
       var opt = {
         url: apiUrl(node, 'sync'),

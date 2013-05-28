@@ -11,7 +11,7 @@ $(document).ready(function() {
 
   module('buddycloud.Channel', {
     setup: function() {
-      Util.init(apiUrl, domain, user.jid, user.password);
+      Util.init(apiUrl, domain, user);
       sinon.spy($, 'ajax');
     },
     teardown: function() {

@@ -10,7 +10,7 @@ $(document).ready(function() {
 
   module('buddycloud.Sync', {
     setup: function() {
-      Util.init(apiUrl, domain, user.jid, user.password);
+      Util.init(apiUrl, domain, user);
       sinon.spy($, 'ajax');
     },
     teardown: function() {
@@ -89,7 +89,7 @@ $(document).ready(function() {
 
       buddycloud.Sync.get({'node': node, 'since': since, 'max': max}).done(function(data) {
         equal(JSON.stringify(data), JSON.stringify(sync), 'successful sync');
-      }).fail(function(a,b,c) {
+      }).fail(function() {
         // Force fail
         ok(false, 'unexpected failure');
       }).always(function() {
@@ -107,7 +107,7 @@ $(document).ready(function() {
       // Mock HTTP API server
       var server = this.sandbox.useFakeServer();
       server.respondWith('GET', apiUrl + '/' + node + '/sync?since=2013-01-01T03%3A00%3A00.000Z&max=2&counters=true',
-                         [200, {'Content-Type': 'application/json'}, JSON.stringify(sync)]);
+                         [200, {'Content-Type': 'application/json'}, JSON.stringify(syncCounters)]);
 
       var opt = {
         url: apiUrl + '/' + node + '/sync',
@@ -121,7 +121,7 @@ $(document).ready(function() {
       };
 
       buddycloud.Sync.get({'node': node, 'since': since, 'max': max, 'counters': true}).done(function(data) {
-        equal(JSON.stringify(data), JSON.stringify(sync), 'successful sync');
+        equal(JSON.stringify(data), JSON.stringify(syncCounters), 'successful sync');
       }).fail(function() {
         // Force fail
         ok(false, 'unexpected failure');
@@ -134,7 +134,56 @@ $(document).ready(function() {
   );
 
   test(
+    '.get(): wrong username or password',
+
+    function() {
+      // Mock HTTP API server
+      var server = this.sandbox.useFakeServer();
+      server.respondWith('GET', apiUrl + '/' + node + '/sync?since=2013-01-01T03%3A00%3A00.000Z&max=2&counters=true',
+                         [403, {'Content-Type': 'text/plain'}, 'Forbidden']);
+
+      var opt = {
+        url: apiUrl + '/' + node + '/sync',
+        type: 'GET',
+        xhrFields: {withCredentials: true},
+        headers: {
+          'Authorization': Util.authHeader(user.jid, user.password),
+          'Accept': 'application/json'
+        },
+        data: {'since': since, 'max': max, 'counters': true}
+      };
+
+      buddycloud.Sync.get({'node': node, 'since': since, 'max': max, 'counters': true}).done(function(data) {
+        ok(false, 'unexpected success');
+      }).fail(function() {
+        ok(true, 'wrong username or password');
+      }).always(function() {
+        checkAjax(opt);
+      });
+
+      server.respond();
+    }
+  );
+
+
+  test(
     '.get(): not using required parameters',
+
+    function() {
+      throws(
+        function() {
+          buddycloud.Sync.get({'node': node, 'since': since, 'counters': true});
+        },
+        function(error) {
+          return error.message === Util.paramMissingMessage('Sync.get({node, since, max[, counters]})');
+        },
+        'throws required parameters error'
+      );
+    }
+  );
+
+  test(
+    '.get(): using no parameters',
 
     function() {
       throws(

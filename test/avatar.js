@@ -11,7 +11,7 @@ $(document).ready(function() {
 
   module('buddycloud.Avatar', {
     setup: function() {
-      Util.init(apiUrl, domain, user.jid, user.password);
+      Util.init(apiUrl, domain, user);
       sinon.spy($, 'ajax');
     },
     teardown: function() {
@@ -115,7 +115,7 @@ $(document).ready(function() {
     }
   );
 
-  // buddycloud.Media.set
+  // buddycloud.Avatar.set
 
   function blobFile() {
     return {name: 'avatar.jpg', size: metadata.fileSize, type: metadata.mimeType};
@@ -207,6 +207,22 @@ $(document).ready(function() {
       throws(
         function() {
           buddycloud.Avatar.set(channel, {'content-type': 'image/jpeg'});
+        },
+        function(error) {
+          return error.message === Util.paramMissingMessage('Avatar.set(channel, {file[, content-type, filename, title]})');
+        },
+        'throws required parameters error'
+      );
+    }
+  );
+
+  test(
+    '.set(): using no parameters',
+
+    function() {
+      throws(
+        function() {
+          buddycloud.Avatar.set();
         },
         function(error) {
           return error.message === Util.paramMissingMessage('Avatar.set(channel, {file[, content-type, filename, title]})');

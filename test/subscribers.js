@@ -10,9 +10,9 @@ $(document).ready(function() {
   var channel = 'test@topics.TEST.COM';
   var node = 'node';
 
-  module('buddycloud.Media', {
+  module('buddycloud.Subscribers', {
     setup: function() {
-      Util.init(apiUrl, domain, user.jid, user.password);
+      Util.init(apiUrl, domain, user);
       sinon.spy($, 'ajax');
     },
     teardown: function() {
@@ -132,6 +132,22 @@ $(document).ready(function() {
 
   test(
     '.get(): not using required parameters',
+
+    function() {
+      throws(
+        function() {
+          buddycloud.Subscribers.get({'channel': channel});
+        },
+        function(error) {
+          return error.message === Util.paramMissingMessage('Subscribers.get({channel, node})');
+        },
+        'throws required parameters error'
+      );
+    }
+  );
+
+  test(
+    '.get(): using no parameters',
 
     function() {
       throws(

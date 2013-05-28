@@ -9,9 +9,9 @@ $(document).ready(function() {
   };
   var channel = 'test@topics.TEST.COM';
 
-  module('buddycloud.Media', {
+  module('buddycloud.Subscribed', {
     setup: function() {
-      Util.init(apiUrl, domain, user.jid, user.password);
+      Util.init(apiUrl, domain, user);
       sinon.spy($, 'ajax');
     },
     teardown: function() {
@@ -191,6 +191,22 @@ $(document).ready(function() {
       });
 
       server.respond();
+    }
+  );
+
+  test(
+    '.update(): using no paramters',
+
+    function() {
+      throws(
+        function() {
+          buddycloud.Subscribed.update();
+        },
+        function(error) {
+          return error.message === Util.paramMissingMessage('Subscribed.update(subscriptions)');
+        },
+        'throws not logged error'
+      );
     }
   );
 

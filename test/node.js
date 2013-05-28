@@ -12,7 +12,7 @@ $(document).ready(function() {
 
   module('buddycloud.Node', {
     setup: function() {
-      Util.init(apiUrl, domain, user.jid, user.password);
+      Util.init(apiUrl, domain, user);
       sinon.spy($, 'ajax');
     },
     teardown: function() {
@@ -74,6 +74,22 @@ $(document).ready(function() {
 
   test(
     '.create(): not using required parameters',
+
+    function() {
+      throws(
+        function() {
+          buddycloud.Node.create({'node': node});
+        },
+        function(error) {
+          return error.message === Util.paramMissingMessage('Node.create({channel, node})');
+        },
+        'throws required parameters error'
+      );
+    }
+  );
+
+  test(
+    '.create(): using no parameters',
 
     function() {
       throws(

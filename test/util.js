@@ -1,5 +1,5 @@
 var Util = (function() {
-  function init(apiUrl, domain, userJid, userPassword) {
+  function init(apiUrl, domain, user) {
     // Initialize lib
     buddycloud.init({'apiUrl': apiUrl, 'domain': domain});
 
@@ -8,7 +8,7 @@ var Util = (function() {
     server.respondWith('GET', apiUrl, [204, {'Content-Type': 'text/plain'}, 'No content']);
 
     // Do login
-    buddycloud.Auth.login(userJid, userPassword);
+    buddycloud.Auth.login(user);
     server.respond();
   }
 

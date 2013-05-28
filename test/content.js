@@ -12,7 +12,7 @@ $(document).ready(function() {
 
   module('buddycloud.Content', {
     setup: function() {
-      Util.init(apiUrl, domain, user.jid, user.password);
+      Util.init(apiUrl, domain, user);
       sinon.spy($, 'ajax');
     },
     teardown: function() {
@@ -340,6 +340,22 @@ $(document).ready(function() {
     }
   );
 
+  test(
+    '.get(): using no parameters',
+
+    function() {
+      throws(
+        function() {
+          buddycloud.Content.get();
+        },
+        function(error) {
+          return error.message === Util.paramMissingMessage('Content.get({channel, node[, item]}[, {max, after}])');
+        },
+        'throws required parameters error'
+      );
+    }
+  );
+
   // buddycloud.Content.add
   test(
     '.add(): add item to channel content',
@@ -416,6 +432,22 @@ $(document).ready(function() {
       throws(
         function() {
           buddycloud.Content.add({'channel': channel, 'node': node});
+        },
+        function(error) {
+          return error.message === Util.paramMissingMessage('Content.add({channel, node, content})');
+        },
+        'throws required parameters error'
+      );
+    }
+  );
+
+  test(
+    '.add(): using no parameters',
+
+    function() {
+      throws(
+        function() {
+          buddycloud.Content.add();
         },
         function(error) {
           return error.message === Util.paramMissingMessage('Content.add({channel, node, content})');
@@ -525,6 +557,22 @@ $(document).ready(function() {
   );
 
   test(
+    '.remove(): using no parameters',
+
+    function() {
+      throws(
+        function() {
+          buddycloud.Content.remove();
+        },
+        function(error) {
+          return error.message === Util.paramMissingMessage('Content.remove({channel, node, item})');
+        },
+        'throws required parameters error'
+      );
+    }
+  );
+
+  test(
     '.remove(): try to remove content without being logged',
 
     function() {
@@ -542,4 +590,5 @@ $(document).ready(function() {
       );
     }
   );
+  
 });
