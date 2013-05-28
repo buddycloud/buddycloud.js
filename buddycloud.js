@@ -635,7 +635,7 @@
         }
       };
 
-      return ajax(opt);subsc
+      return ajax(opt);
     },
 
     update: function(subscriptions) {
