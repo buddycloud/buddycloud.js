@@ -1,4 +1,4 @@
 buddycloud.js
 =============
 
-It is like magic, but it is technology.
+It's like magic, but it's technology.
