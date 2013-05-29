@@ -33,10 +33,7 @@
 
 <p>buddycloud.js enables you to quickly build social features to your webapp. It uses <a href="http://buddycloud.com/">buddycloud's</a> distributed social network backend and is designed to be easy to use.</p>
 
-<ul>
-<li>auto-gen TOC:
-{:toc}</li>
-</ul><h2>
+<h2>
 <a name="getting-started" class="anchor" href="#getting-started"><span class="octicon octicon-link"></span></a>Getting started</h2>
 
 <h3>
@@ -117,41 +114,48 @@
 <h3>
 <a name="getting-a-channel-nodes-content" class="anchor" href="#getting-a-channel-nodes-content"><span class="octicon octicon-link"></span></a>Getting a channel node's content</h3>
 
-<p>Query: </p>
-
-<div class="highlight"><pre><span class="nx">buddycloud</span><span class="p">.</span><span class="nx">Content</span><span class="p">.</span><span class="nx">get</span><span class="p">({</span>
-  <span class="nx">channel</span><span class="o">:</span> <span class="s1">'sparkle@buddycloud.org'</span><span class="p">,</span>
-  <span class="nx">node</span><span class="o">:</span> <span class="s1">'posts'</span>
-<span class="p">}).</span><span class="nx">done</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
-<span class="p">});</span>
-</pre></div>
-
-<p>Result:</p>
-
-<div class="highlight"><pre><span class="p">[</span>
-  <span class="p">{</span>
-    <span class="s2">"id"</span><span class="o">:</span> <span class="s2">"foo"</span><span class="p">,</span>
-    <span class="s2">"author"</span><span class="o">:</span> <span class="s2">"sparkle@buddycloud.org"</span><span class="p">,</span>
-    <span class="s2">"updated"</span><span class="o">:</span> <span class="s2">"2013-06-01T12:00:00Z"</span><span class="p">,</span>
-    <span class="s2">"content"</span><span class="o">:</span> <span class="s2">"buddycloud.js is awesome!"</span><span class="p">,</span>
-  <span class="p">},</span>
-  <span class="p">{</span>
-    <span class="s2">"id"</span><span class="o">:</span> <span class="s2">"bar"</span><span class="p">,</span>
-    <span class="s2">"author"</span><span class="o">:</span> <span class="s2">"henry@buddycloud.org"</span><span class="p">,</span>
-    <span class="s2">"updated"</span><span class="o">:</span> <span class="s2">"2013-05-31T12:00:00Z"</span><span class="p">,</span>
-    <span class="s2">"content"</span><span class="o">:</span> <span class="s2">"Hey Sparkle! How are you?"</span><span class="p">,</span>
-  <span class="p">},</span>
-  <span class="p">{</span>
-    <span class="s2">"id"</span><span class="o">:</span> <span class="s2">"baz"</span><span class="p">,</span>
-    <span class="s2">"author"</span><span class="o">:</span> <span class="s2">"sparkle@buddycloud.org"</span><span class="p">,</span>
-    <span class="s2">"updated"</span><span class="o">:</span> <span class="s2">"2013-05-30T12:00:00Z"</span><span class="p">,</span>
-    <span class="s2">"content"</span><span class="o">:</span> <span class="s2">"Feeling good today!"</span><span class="p">,</span>
-  <span class="p">}</span>
-<span class="p">]</span>
-</pre></div>
-
-<p>Retrieve a specific item:</p>
+<table>
+<tr>
+<th>Query:</th>
+<th>Result:</th>
+</tr>
+<tr>
+<td>
+```javascript
+buddycloud.Content.get({
+  channel: 'sparkle@buddycloud.org',
+  node: 'posts'
+}).done(function(data) {
+  console.log(data);
+});
+```
+</td>
+<td>
+```javascript
+[
+  {
+    "id": "foo",
+    "author": "sparkle@buddycloud.org",
+    "updated": "2013-06-01T12:00:00Z",
+    "content": "buddycloud.js is awesome!",
+  },
+  {
+    "id": "bar",
+    "author": "henry@buddycloud.org",
+    "updated": "2013-05-31T12:00:00Z",
+    "content": "Hey Sparkle! How are you?",
+  },
+  {
+    "id": "baz",
+    "author": "sparkle@buddycloud.org",
+    "updated": "2013-05-30T12:00:00Z",
+    "content": "Feeling good today!",
+  }
+]
+```
+</td>
+</tr>
+</table><p>Retrieve a specific item:</p>
 
 <div class="highlight"><pre><span class="nx">buddycloud</span><span class="p">.</span><span class="nx">Content</span><span class="p">.</span><span class="nx">get</span><span class="p">({</span>
   <span class="nx">channel</span><span class="o">:</span> <span class="s1">'sparkle@buddycloud.org'</span><span class="p">,</span>
