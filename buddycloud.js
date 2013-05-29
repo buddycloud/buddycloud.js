@@ -1,4 +1,29 @@
-(function(){
+//     buddycloud.js 0.0.1
+
+
+ //     Copyright 2012 buddycloud
+ //
+ //     Licensed under the Apache License, Version 2.0 (the "License");
+ //     you may not use this file except in compliance with the License.
+ //     You may obtain a copy of the License at
+ //
+ //     http://www.apache.org/licenses/LICENSE-2.0
+ //
+ //     Unless required by applicable law or agreed to in writing, software
+ //     distributed under the License is distributed on an "AS IS" BASIS,
+ //     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ //     See the License for the specific language governing permissions and
+ //     limitations under the License.
+
+
+ (function(){
+
+
+  // Initial Setup
+  // -------------
+
+
+
   var root = this;
 
   var buddycloud = root.buddycloud = {};
@@ -135,8 +160,13 @@
     return buddycloud.config.jid && buddycloud.config.credentials ? true : false;
   };
 
-  // Default configuration
-  var DefaultConfig = buddycloud.config = {
+
+  // Default Configuration
+  // ---------------------
+
+
+
+  buddycloud.config = {
     url: 'https://api.buddycloud.org',
     domain: 'buddycloud.org',
     jid: null,
@@ -154,6 +184,12 @@
   // Assign to buddycloud
   buddycloud.init = init;
   buddycloud.ready = ready;
+
+
+  // buddycloud.Account
+  // ------------------
+
+
 
   buddycloud.Account = {
     create: function(credentials) {
@@ -181,6 +217,12 @@
       // TODO: Not implemented on API
     }
   };
+
+
+  // buddycloud.Avatar
+  // -----------------
+
+
 
   buddycloud.Avatar = {
     get: function(channel, params) {
@@ -247,6 +289,12 @@
     }
   };
 
+
+  // buddycloud.Auth
+  // ---------------
+
+
+
   buddycloud.Auth = {
     login: function(credentials) {
       if (!checkObject(credentials, 'jid', 'password')) {
@@ -278,6 +326,12 @@
     }
   };
 
+
+  // buddycloud.Channel
+  // ------------------
+
+
+
   buddycloud.Channel = {
     create: function(channel) {
       if (!channel) {
@@ -306,6 +360,12 @@
       return ajax(opt);
     }
   };
+
+
+  // buddycloud.Content
+  // ------------------
+
+
 
   buddycloud.Content = {
     get: function(path, params) {
@@ -390,6 +450,12 @@
     }
   };
 
+
+  // buddycloud.Discovery
+  // --------------------
+
+
+
   buddycloud.Discovery = {
     recommendations: function(channel, params) {
       if (!(channel && typeof channel === 'string')) {
@@ -466,6 +532,12 @@
       return ajax(opt);
     }
   };
+
+
+  // buddycloud.Media
+  // ----------------
+
+
 
   buddycloud.Media = {
     getMetadata: function(channel, params) {
@@ -578,6 +650,12 @@
     }
   };
 
+
+  // buddycloud.Metadata
+  // -------------------
+
+
+
   buddycloud.Metadata = {
     get: function(path) {
       if (!checkObject(path, 'channel', 'node')) {
@@ -625,6 +703,12 @@
     }
   };
 
+
+  // buddycloud.Node
+  // ---------------
+
+
+
   buddycloud.Node = {
     create: function(path) {
       if (!checkObject(path, 'channel', 'node')) {
@@ -647,6 +731,12 @@
       return ajax(opt);
     }
   };
+
+
+  // buddycloud.NotificationSettings
+  // -------------------------------
+
+
 
   buddycloud.NotificationSettings = {
     get: function(type) {
@@ -697,6 +787,12 @@
     }
   };
 
+
+  // buddycloud.Subscribed
+  // ---------------------
+
+
+
   buddycloud.Subscribed = {
     get: function() {
       if (!ready()) {
@@ -737,6 +833,12 @@
     }
   };
 
+
+  // buddycloud.Subscribers
+  // ----------------------
+
+
+
   buddycloud.Subscribers = {
     get: function(path) {
       if (!checkObject(path, 'channel', 'node')) {
@@ -761,6 +863,12 @@
       return ajax(opt);
     }
   };
+
+
+  // buddycloud.Sync
+  // ---------------
+
+
 
   buddycloud.Sync = {
     get: function(params) {
