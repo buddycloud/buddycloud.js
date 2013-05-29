@@ -28,24 +28,38 @@
         </ul>
       </header>
       <section>
-        <h2>Overview</h2>
+        <h2>
+<a name="overview" class="anchor" href="#overview"><span class="octicon octicon-link"></span></a>Overview</h2>
 
-<p>buddycloud.js is a library that enables developers to quickly build social features in their JavaScript projects.</p>
+<p>buddycloud.js enables you to quickly build social features to your webapp. It uses <a href="http://buddycloud.com/">buddycloud's</a> distributed social network backend and is designed to be easy to use.</p>
 
-<p>For more information about buddycloud, visit <a href="http://buddycloud.com/">buddycloud.com</a>.</p>
+<ul>
+<li>auto-gen TOC:
+{:toc}</li>
+</ul><h2>
+<a name="getting-started" class="anchor" href="#getting-started"><span class="octicon octicon-link"></span></a>Getting started</h2>
 
-<h2>Getting started</h2>
-
-<h3>Include buddycloud.js</h3>
+<h3>
+<a name="include-buddycloudjs" class="anchor" href="#include-buddycloudjs"><span class="octicon octicon-link"></span></a>Include buddycloud.js</h3>
 
 <div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"buddycloud.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
 </pre></div>
 
-<p>buddycloud.js's only hard dependency is jQuery ( &gt;= 1.5).</p>
+<p>buddycloud.js's depends on jQuery ( &gt;= 1.5).</p>
 
-<h3>Initialize</h3>
+<h3>
+<a name="finding-your-api-server" class="anchor" href="#finding-your-api-server"><span class="octicon octicon-link"></span></a>finding your API server</h3>
 
-<p>To start using the library, you need to initialize it passing the URL for the API that you going tu use, and your buddycloud domain.</p>
+<p>buddycloud is a distributed social network. To find your API server run the following command</p>
+
+<div class="highlight"><pre>dig -t TXT _buddycloud-api._tcp.buddycloud.org. +short
+<span class="s2">"v=1.0"</span> <span class="s2">"host=api.buddycloud.org"</span> <span class="s2">"protocol=https"</span> <span class="s2">"path=/"</span> <span class="s2">"port=443"</span>
+</pre></div>
+
+<h3>
+<a name="initialize" class="anchor" href="#initialize"><span class="octicon octicon-link"></span></a>Initialize</h3>
+
+<p>Initialize buddycloud.js:</p>
 
 <div class="highlight"><pre><span class="nx">buddycloud</span><span class="p">.</span><span class="nx">init</span><span class="p">({</span>
   <span class="nx">apiUrl</span><span class="o">:</span> <span class="s1">'https://api.buddycloud.org'</span><span class="p">,</span>
@@ -53,11 +67,12 @@
 <span class="p">});</span>
 </pre></div>
 
-<p>By default, the library is already configured to point to buddycloud main API and domain.</p>
+<p>By default buddycloud.js will use the buddycloud.org API. If you run your own buddycloud API, point it at that.</p>
 
-<h3>Login</h3>
+<h3>
+<a name="authentication" class="anchor" href="#authentication"><span class="octicon octicon-link"></span></a>Authentication</h3>
 
-<p>To be able to handle actions that needs authentication, you must call the login method of the library. If the login is successful, the library stores your credentials (Base64 encoded) and you are ready to call methods that requires authentication.</p>
+<p>To handle actions that needs authentication, such as following or media uploading, call the login method. The library stores your credentials (Base64 encoded) and you are ready to call any methods that requires authentication.</p>
 
 <div class="highlight"><pre><span class="nx">buddycloud</span><span class="p">.</span><span class="nx">Auth</span><span class="p">.</span><span class="nx">login</span><span class="p">({</span>
   <span class="nx">jid</span><span class="o">:</span> <span class="s1">'sparkle@buddycloud.org'</span><span class="p">,</span>
@@ -65,24 +80,26 @@
 <span class="p">});</span>
 </pre></div>
 
-<p>The library only handles <strong>one</strong> logged user per time.</p>
+<p>The library handles <strong>one</strong> user session.</p>
 
-<h3>Create a new user account</h3>
+<h3>
+<a name="create-a-new-buddycloud-user" class="anchor" href="#create-a-new-buddycloud-user"><span class="octicon octicon-link"></span></a>Create a new buddycloud user</h3>
 
 <div class="highlight"><pre><span class="nx">buddycloud</span><span class="p">.</span><span class="nx">Account</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
-  <span class="nx">jid</span><span class="o">:</span> <span class="s1">'henry@buddycloud'</span><span class="p">,</span>
-  <span class="nx">password</span><span class="o">:</span> <span class="s1">'henry456'</span><span class="p">,</span>
-  <span class="nx">email</span><span class="o">:</span> <span class="s1">'henry@dragons.com'</span>
+  <span class="nx">jid</span><span class="o">:</span> <span class="s1">'JewlRider@buddycloud.org'</span><span class="p">,</span>
+  <span class="nx">password</span><span class="o">:</span> <span class="s1">'leather-saddle22'</span><span class="p">,</span>
+  <span class="nx">email</span><span class="o">:</span> <span class="s1">'jewlrider@unicorn-village.com'</span>
 <span class="p">});</span>
 </pre></div>
 
 <p>Once the user is successfully created, the library stores its credentials and no login is needed.</p>
 
-<h3>Ajax and promises</h3>
+<h3>
+<a name="ajax-and-promises" class="anchor" href="#ajax-and-promises"><span class="octicon octicon-link"></span></a>Ajax and promises</h3>
 
 <p>buddycloud.js uses <a href="http://api.jquery.com/jQuery.ajax/">jQuery.ajax()</a> to make HTTP requests. Every <em>$.ajax()</em> request returns a jqXHR object that implements a Promise interface (check <a href="http://api.jquery.com/category/deferred-object/">Deferred objects</a> for more information) and can be used to verify requests results using <em>.done()</em>, <em>.fail()</em> and <em>.then()</em> methods.</p>
 
-<p>For example, checking the result of a login request:</p>
+<p>An example of using promises for checking the result of a login request:</p>
 
 <div class="highlight"><pre><span class="nx">buddycloud</span><span class="p">.</span><span class="nx">Auth</span><span class="p">.</span><span class="nx">login</span><span class="p">({</span>
   <span class="nx">jid</span><span class="o">:</span> <span class="s1">'sparkle@buddycloud.org'</span><span class="p">,</span> 
@@ -94,9 +111,13 @@
 <span class="p">});</span>
 </pre></div>
 
-<h2>Usage example</h2>
+<h2>
+<a name="usage-example" class="anchor" href="#usage-example"><span class="octicon octicon-link"></span></a>Usage example</h2>
 
-<h3>Getting a channel node's content</h3>
+<h3>
+<a name="getting-a-channel-nodes-content" class="anchor" href="#getting-a-channel-nodes-content"><span class="octicon octicon-link"></span></a>Getting a channel node's content</h3>
+
+<p>Query: </p>
 
 <div class="highlight"><pre><span class="nx">buddycloud</span><span class="p">.</span><span class="nx">Content</span><span class="p">.</span><span class="nx">get</span><span class="p">({</span>
   <span class="nx">channel</span><span class="o">:</span> <span class="s1">'sparkle@buddycloud.org'</span><span class="p">,</span>
@@ -130,7 +151,7 @@
 <span class="p">]</span>
 </pre></div>
 
-<p>You can also retrieve a specific item:</p>
+<p>Retrieve a specific item:</p>
 
 <div class="highlight"><pre><span class="nx">buddycloud</span><span class="p">.</span><span class="nx">Content</span><span class="p">.</span><span class="nx">get</span><span class="p">({</span>
   <span class="nx">channel</span><span class="o">:</span> <span class="s1">'sparkle@buddycloud.org'</span><span class="p">,</span>
@@ -151,7 +172,8 @@
 <span class="p">}</span>
 </pre></div>
 
-<h3>Adding new content to a channel's node</h3>
+<h3>
+<a name="adding-new-content-to-a-channels-node" class="anchor" href="#adding-new-content-to-a-channels-node"><span class="octicon octicon-link"></span></a>Adding new content to a channel's node</h3>
 
 <div class="highlight"><pre><span class="nx">buddycloud</span><span class="p">.</span><span class="nx">Content</span><span class="p">.</span><span class="nx">add</span><span class="p">({</span>
   <span class="nx">channel</span><span class="o">:</span> <span class="s1">'sparkle@buddycloud.org'</span><span class="p">,</span>
@@ -160,7 +182,8 @@
 <span class="p">});</span>
 </pre></div>
 
-<h3>Uploading media files to a channel</h3>
+<h3>
+<a name="uploading-media-files-to-a-channel" class="anchor" href="#uploading-media-files-to-a-channel"><span class="octicon octicon-link"></span></a>Uploading media files to a channel</h3>
 
 <p>buddycloud also supports media handling.</p>
 
@@ -192,7 +215,8 @@
 <span class="p">}</span>
 </pre></div>
 
-<h3>Retrieving media files</h3>
+<h3>
+<a name="retrieving-media-files" class="anchor" href="#retrieving-media-files"><span class="octicon octicon-link"></span></a>Retrieving media files</h3>
 
 <div class="highlight"><pre><span class="nx">buddycloud</span><span class="p">.</span><span class="nx">Media</span><span class="p">.</span><span class="nx">get</span><span class="p">({</span>
   <span class="nx">channel</span><span class="o">:</span> <span class="s1">'cats@topics.buddycloud.org'</span><span class="p">,</span>
@@ -215,12 +239,14 @@
 <span class="p">});</span>
 </pre></div>
 
-<h3>Bugs and issues</h3>
+<h3>
+<a name="bugs-and-issues" class="anchor" href="#bugs-and-issues"><span class="octicon octicon-link"></span></a>Bugs and issues</h3>
 
 <p>Please report these on the Github page - at <a href="https://github.com/buddycloud/buddycloud.js">github.com/buddycloud/buddycloud.js</a>.
 New contributions to the library are welcome.</p>
 
-<h3>License</h3>
+<h3>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h3>
 
 <p>buddycloud.js is open source and available under <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License 2.0</a>. </p>
       </section>
