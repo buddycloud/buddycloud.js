@@ -16,7 +16,7 @@
     <div class="wrapper">
       <header>
         <h1>buddycloud.js</h1>
-        <p>It is like magic, but it is technology.</p>
+        <p>It's like magic, but it's technology.</p>
 
         <p class="view"><a href="https://github.com/buddycloud/buddycloud.js">View the Project on GitHub <small>buddycloud/buddycloud.js</small></a></p>
 
@@ -32,6 +32,8 @@
 <a name="overview" class="anchor" href="#overview"><span class="octicon octicon-link"></span></a>Overview</h2>
 
 <p>buddycloud.js enables you to quickly build social features to your webapp. It uses <a href="http://buddycloud.com/">buddycloud's</a> distributed social network backend and is designed to be easy to use.</p>
+
+<p><a href="buddycloud.com/buddycloudjs-reference">Full API reference</a></p>
 
 <h2>
 <a name="getting-started" class="anchor" href="#getting-started"><span class="octicon octicon-link"></span></a>Getting started</h2>
@@ -94,7 +96,7 @@
 <h3>
 <a name="ajax-and-promises" class="anchor" href="#ajax-and-promises"><span class="octicon octicon-link"></span></a>Ajax and promises</h3>
 
-<p>buddycloud.js uses <a href="http://api.jquery.com/jQuery.ajax/">jQuery.ajax()</a> to make HTTP requests. Every <em>$.ajax()</em> request returns a jqXHR object that implements a Promise interface (check <a href="http://api.jquery.com/category/deferred-object/">Deferred objects</a> for more information) and can be used to verify requests results using <em>.done()</em>, <em>.fail()</em> and <em>.then()</em> methods.</p>
+<p>buddycloud.js uses <a href="http://api.jquery.com/jQuery.ajax/">jQuery.ajax()</a> to make HTTP requests. Every <code>$.ajax()</code> request returns a jqXHR object that implements a Promise interface (check <a href="http://api.jquery.com/category/deferred-object/">Deferred objects</a> for more information) and can be used to verify requests results using <code>.done()</code>, <code>.fail()</code>, <code>.always()</code> and <code>.then()</code> methods.</p>
 
 <p>An example of using promises for checking the result of a login request:</p>
 
@@ -116,8 +118,6 @@
 
 <p>Example: getting the <em>posts</em> for a user or topic channel</p>
 
-<p><strong>Query</strong></p>
-
 <div class="highlight"><pre><span class="nx">buddycloud</span><span class="p">.</span><span class="nx">Content</span><span class="p">.</span><span class="nx">get</span><span class="p">({</span>
   <span class="nx">channel</span><span class="o">:</span> <span class="s1">'sparkle@buddycloud.org'</span><span class="p">,</span>
   <span class="nx">node</span><span class="o">:</span> <span class="s1">'posts'</span>
@@ -125,8 +125,6 @@
   <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
 <span class="p">});</span>
 </pre></div>
-
-<p><strong>Result</strong></p>
 
 <div class="highlight"><pre><span class="p">[</span>
   <span class="p">{</span>
@@ -155,8 +153,6 @@
 
 <p>Example: retrieve an individual <em>post</em></p>
 
-<p><strong>Query</strong></p>
-
 <div class="highlight"><pre><span class="nx">buddycloud</span><span class="p">.</span><span class="nx">Content</span><span class="p">.</span><span class="nx">get</span><span class="p">({</span>
   <span class="nx">channel</span><span class="o">:</span> <span class="s1">'sparkle@buddycloud.org'</span><span class="p">,</span>
   <span class="nx">node</span><span class="o">:</span> <span class="s1">'posts'</span><span class="p">,</span>
@@ -165,8 +161,6 @@
   <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
 <span class="p">});</span>
 </pre></div>
-
-<p><strong>Result</strong></p>
 
 <div class="highlight"><pre><span class="p">{</span>
   <span class="s2">"id"</span><span class="o">:</span> <span class="s2">"foo"</span><span class="p">,</span>
@@ -179,8 +173,7 @@
 <h3>
 <a name="adding-new-content-to-a-channels-node" class="anchor" href="#adding-new-content-to-a-channels-node"><span class="octicon octicon-link"></span></a>Adding new content to a channel's node</h3>
 
-<p>Example: posting a status update to a channel
-<strong>Query</strong></p>
+<p>Example: posting a status update to a channel</p>
 
 <div class="highlight"><pre><span class="nx">buddycloud</span><span class="p">.</span><span class="nx">Content</span><span class="p">.</span><span class="nx">add</span><span class="p">({</span>
   <span class="nx">channel</span><span class="o">:</span> <span class="s1">'sparkle@buddycloud.org'</span><span class="p">,</span>
@@ -194,8 +187,6 @@
 
 <p>Example: sharing photos to the followers of a channel</p>
 
-<p><strong>Query</strong></p>
-
 <div class="highlight"><pre><span class="nx">buddycloud</span><span class="p">.</span><span class="nx">Media</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s1">'cats@topics.buddycloud.org'</span><span class="p">,</span> <span class="p">{</span>
   <span class="nx">file</span><span class="o">:</span> <span class="nx">mediaFile</span><span class="p">,</span>
   <span class="nx">filename</span><span class="o">:</span> <span class="s1">'tom.jpg'</span><span class="p">,</span>
@@ -205,8 +196,6 @@
   <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
 <span class="p">});</span>
 </pre></div>
-
-<p><strong>Result</strong></p>
 
 <div class="highlight"><pre><span class="p">{</span>
   <span class="s2">"id"</span><span class="o">:</span><span class="s2">"f00"</span><span class="p">,</span>
@@ -227,8 +216,6 @@
 <h3>
 <a name="retrieving-files-from-buddycloud" class="anchor" href="#retrieving-files-from-buddycloud"><span class="octicon octicon-link"></span></a>Retrieving files from buddycloud</h3>
 
-<p><strong>Query</strong></p>
-
 <div class="highlight"><pre><span class="nx">buddycloud</span><span class="p">.</span><span class="nx">Media</span><span class="p">.</span><span class="nx">get</span><span class="p">({</span>
   <span class="nx">channel</span><span class="o">:</span> <span class="s1">'cats@topics.buddycloud.org'</span><span class="p">,</span>
   <span class="nx">mediaId</span><span class="o">:</span> <span class="s1">'iL3fahp8'</span>
@@ -237,10 +224,9 @@
 <span class="p">});</span>
 </pre></div>
 
-<p><strong>Result</strong>
-Will return a file. There is a special mediaID called <code>avatar</code> to return the channels' avatar.</p>
+<p>Will return a file. There is a special mediaID called <code>avatar</code> to return the channels' avatar.</p>
 
-<p>You can also request a resized image using the <em>maxheight</em> and <em>maxwidth</em> parameters:</p>
+<p>You can also request a resized image using the <code>maxheight</code> and <code>maxwidth</code> parameters:</p>
 
 <div class="highlight"><pre><span class="nx">buddycloud</span><span class="p">.</span><span class="nx">Media</span><span class="p">.</span><span class="nx">get</span><span class="p">({</span>
   <span class="nx">channel</span><span class="o">:</span> <span class="s1">'cats@topics.buddycloud.org'</span><span class="p">,</span>
@@ -254,10 +240,10 @@ Will return a file. There is a special mediaID called <code>avatar</code> to ret
 </pre></div>
 
 <h3>
-<a name="bugs-and-issues" class="anchor" href="#bugs-and-issues"><span class="octicon octicon-link"></span></a>Bugs and issues</h3>
+<a name="issues" class="anchor" href="#issues"><span class="octicon octicon-link"></span></a>Issues</h3>
 
-<p>Please report these on the Github page - at <a href="https://github.com/buddycloud/buddycloud.js">github.com/buddycloud/buddycloud.js</a>.
-New contributions to the library are welcome.</p>
+<p>Please report issues at <a href="https://github.com/buddycloud/buddycloud.js">github.com/buddycloud/buddycloud.js</a>.
+Pull requests welcomed.</p>
 
 <h3>
 <a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h3>
