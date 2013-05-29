@@ -58,7 +58,7 @@
     var params = args.shift();
     var next = args.shift();
 
-    var temp = {};
+    var temp = options.data || {};
     while (next) {
       for (var property in params) {
         if (property.toLowerCase() === next) {
@@ -184,7 +184,7 @@
 
   buddycloud.Avatar = {
     get: function(channel, params) {
-      if (!channel) {
+      if (!(channel && typeof channel === 'string')) {
         raiseError(buddycloud.config.paramMissingErr, ['Avatar.get(channel[, {maxheight, maxwidth}])']);
       }
 
@@ -390,9 +390,86 @@
     }
   };
 
+  buddycloud.Discovery = {
+    recommendations: function(channel, params) {
+      if (!(channel && typeof channel === 'string')) {
+        raiseError(buddycloud.config.paramMissingErr, ['Discovery.recommendations(channel[, {max, index}])']);
+      }
+
+      var opt = {
+        url: apiUrl('recommendations'),
+        type: 'GET',
+        headers: {
+          'Accept': 'application/json'
+        },
+        data: {'user': channel}
+      };
+
+      if (params) {
+        insertValidParameters(opt, params, 'max', 'index');
+      }
+
+      return ajax(opt);
+    },
+
+    similar: function(channel, params) {
+      if (!(channel && typeof channel === 'string')) {
+        raiseError(buddycloud.config.paramMissingErr, ['Discovery.similar(channel[, {max, index}])']);
+      }
+
+      var opt = {
+        url: apiUrl(channel, 'similar'),
+        type: 'GET',
+        headers: {
+          'Accept': 'application/json'
+        }
+      };
+
+      if (params) {
+        insertValidParameters(opt, params, 'max', 'index');
+      }
+
+      return ajax(opt);
+    },
+
+    search: function(query) {
+      if (!checkObject(query, 'type', 'q')) {
+        raiseError(buddycloud.config.paramMissingErr, ['Discovery.search({type, q[, max, index]})']);
+      }
+
+      var opt = {
+        url: apiUrl('search'),
+        type: 'GET',
+        headers: {
+          'Accept': 'application/json'
+        }
+      };
+
+      insertValidParameters(opt, query, 'type', 'q', 'max', 'index');
+
+      return ajax(opt);
+    },
+
+    mostActive: function(params) {
+      var opt = {
+        url: apiUrl('most_active'),
+        type: 'GET',
+        headers: {
+          'Accept': 'application/json'
+        }
+      };
+
+      if (params) {
+        insertValidParameters(opt, params, 'max', 'index');
+      }
+
+      return ajax(opt);
+    }
+  };
+
   buddycloud.Media = {
     getMetadata: function(channel, params) {
-      if (!channel) {
+      if (!(channel && typeof channel === 'string')) {
         raiseError(buddycloud.config.paramMissingErr, ['Media.getMetadata(channel[,{max, after}])']);
       }
 
@@ -440,7 +517,7 @@
     },
 
     add: function(channel, media) {
-      if (!channel || !checkObject(media, 'file')) {
+      if (!(channel && typeof channel === 'string') || !checkObject(media, 'file')) {
         raiseError(buddycloud.config.paramMissingErr, ['Media.add(channel, {file[, content-type, filename, title]})']);
       }
 

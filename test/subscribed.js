@@ -195,7 +195,7 @@ $(document).ready(function() {
   );
 
   test(
-    '.update(): using no paramters',
+    '.update(): using no parameters',
 
     function() {
       throws(
@@ -205,7 +205,7 @@ $(document).ready(function() {
         function(error) {
           return error.message === Util.paramMissingMessage('Subscribed.update(subscriptions)');
         },
-        'throws not logged error'
+        'throws required parameters error'
       );
     }
   );
