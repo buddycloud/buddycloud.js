@@ -114,48 +114,48 @@
 <h3>
 <a name="getting-a-channel-nodes-content" class="anchor" href="#getting-a-channel-nodes-content"><span class="octicon octicon-link"></span></a>Getting a channel node's content</h3>
 
-<table>
-<tr>
-<th>Query:</th>
-<th>Result:</th>
-</tr>
-<tr>
-<td>
-```javascript
-buddycloud.Content.get({
-  channel: 'sparkle@buddycloud.org',
-  node: 'posts'
-}).done(function(data) {
-  console.log(data);
-});
-```
-</td>
-<td>
-```javascript
-[
-  {
-    "id": "foo",
-    "author": "sparkle@buddycloud.org",
-    "updated": "2013-06-01T12:00:00Z",
-    "content": "buddycloud.js is awesome!",
-  },
-  {
-    "id": "bar",
-    "author": "henry@buddycloud.org",
-    "updated": "2013-05-31T12:00:00Z",
-    "content": "Hey Sparkle! How are you?",
-  },
-  {
-    "id": "baz",
-    "author": "sparkle@buddycloud.org",
-    "updated": "2013-05-30T12:00:00Z",
-    "content": "Feeling good today!",
-  }
-]
-```
-</td>
-</tr>
-</table><p>Retrieve a specific item:</p>
+<p>Example: getting the <em>posts</em> for a user or topic channel</p>
+
+<p><strong>Query</strong></p>
+
+<div class="highlight"><pre><span class="nx">buddycloud</span><span class="p">.</span><span class="nx">Content</span><span class="p">.</span><span class="nx">get</span><span class="p">({</span>
+  <span class="nx">channel</span><span class="o">:</span> <span class="s1">'sparkle@buddycloud.org'</span><span class="p">,</span>
+  <span class="nx">node</span><span class="o">:</span> <span class="s1">'posts'</span>
+<span class="p">}).</span><span class="nx">done</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+
+<p><strong>Result</strong></p>
+
+<div class="highlight"><pre><span class="p">[</span>
+  <span class="p">{</span>
+    <span class="s2">"id"</span><span class="o">:</span> <span class="s2">"foo"</span><span class="p">,</span>
+    <span class="s2">"author"</span><span class="o">:</span> <span class="s2">"sparkle@buddycloud.org"</span><span class="p">,</span>
+    <span class="s2">"updated"</span><span class="o">:</span> <span class="s2">"2013-06-01T12:00:00Z"</span><span class="p">,</span>
+    <span class="s2">"content"</span><span class="o">:</span> <span class="s2">"buddycloud.js is awesome!"</span><span class="p">,</span>
+  <span class="p">},</span>
+  <span class="p">{</span>
+    <span class="s2">"id"</span><span class="o">:</span> <span class="s2">"bar"</span><span class="p">,</span>
+    <span class="s2">"author"</span><span class="o">:</span> <span class="s2">"henry@buddycloud.org"</span><span class="p">,</span>
+    <span class="s2">"updated"</span><span class="o">:</span> <span class="s2">"2013-05-31T12:00:00Z"</span><span class="p">,</span>
+    <span class="s2">"content"</span><span class="o">:</span> <span class="s2">"Hey Sparkle! How are you?"</span><span class="p">,</span>
+  <span class="p">},</span>
+  <span class="p">{</span>
+    <span class="s2">"id"</span><span class="o">:</span> <span class="s2">"baz"</span><span class="p">,</span>
+    <span class="s2">"author"</span><span class="o">:</span> <span class="s2">"sparkle@buddycloud.org"</span><span class="p">,</span>
+    <span class="s2">"updated"</span><span class="o">:</span> <span class="s2">"2013-05-30T12:00:00Z"</span><span class="p">,</span>
+    <span class="s2">"content"</span><span class="o">:</span> <span class="s2">"Feeling good today!"</span><span class="p">,</span>
+  <span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+
+<h3>
+<a name="retrieve-a-specific-item" class="anchor" href="#retrieve-a-specific-item"><span class="octicon octicon-link"></span></a>Retrieve a specific item:</h3>
+
+<p>Example: retrieve an individual <em>post</em></p>
+
+<p><strong>Query</strong></p>
 
 <div class="highlight"><pre><span class="nx">buddycloud</span><span class="p">.</span><span class="nx">Content</span><span class="p">.</span><span class="nx">get</span><span class="p">({</span>
   <span class="nx">channel</span><span class="o">:</span> <span class="s1">'sparkle@buddycloud.org'</span><span class="p">,</span>
@@ -166,30 +166,35 @@ buddycloud.Content.get({
 <span class="p">});</span>
 </pre></div>
 
-<p>Result:</p>
+<p><strong>Result</strong></p>
 
 <div class="highlight"><pre><span class="p">{</span>
   <span class="s2">"id"</span><span class="o">:</span> <span class="s2">"foo"</span><span class="p">,</span>
   <span class="s2">"author"</span><span class="o">:</span> <span class="s2">"sparkle@buddycloud.org"</span><span class="p">,</span>
   <span class="s2">"updated"</span><span class="o">:</span> <span class="s2">"2013-06-01T12:00:00Z"</span><span class="p">,</span>
-  <span class="s2">"content"</span><span class="o">:</span> <span class="s2">"buddycloud.js is awesome!"</span><span class="p">,</span>
+  <span class="s2">"content"</span><span class="o">:</span> <span class="s2">"I got a new saddle today!"</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 
 <h3>
 <a name="adding-new-content-to-a-channels-node" class="anchor" href="#adding-new-content-to-a-channels-node"><span class="octicon octicon-link"></span></a>Adding new content to a channel's node</h3>
 
+<p>Example: posting a status update to a channel
+<strong>Query</strong></p>
+
 <div class="highlight"><pre><span class="nx">buddycloud</span><span class="p">.</span><span class="nx">Content</span><span class="p">.</span><span class="nx">add</span><span class="p">({</span>
   <span class="nx">channel</span><span class="o">:</span> <span class="s1">'sparkle@buddycloud.org'</span><span class="p">,</span>
   <span class="nx">node</span><span class="o">:</span> <span class="s1">'posts'</span><span class="p">,</span>
-  <span class="nx">content</span><span class="o">:</span> <span class="s1">'buddycloud is an awesome social back-end, and is federated!'</span>
+  <span class="nx">content</span><span class="o">:</span> <span class="s1">'Meeting the unicorns for some beer tonight'</span>
 <span class="p">});</span>
 </pre></div>
 
 <h3>
-<a name="uploading-media-files-to-a-channel" class="anchor" href="#uploading-media-files-to-a-channel"><span class="octicon octicon-link"></span></a>Uploading media files to a channel</h3>
+<a name="uploading-files-to-a-channel" class="anchor" href="#uploading-files-to-a-channel"><span class="octicon octicon-link"></span></a>Uploading files to a channel</h3>
 
-<p>buddycloud also supports media handling.</p>
+<p>Example: sharing photos to the followers of a channel</p>
+
+<p><strong>Query</strong></p>
 
 <div class="highlight"><pre><span class="nx">buddycloud</span><span class="p">.</span><span class="nx">Media</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s1">'cats@topics.buddycloud.org'</span><span class="p">,</span> <span class="p">{</span>
   <span class="nx">file</span><span class="o">:</span> <span class="nx">mediaFile</span><span class="p">,</span>
@@ -201,7 +206,7 @@ buddycloud.Content.get({
 <span class="p">});</span>
 </pre></div>
 
-<p>Result:</p>
+<p><strong>Result</strong></p>
 
 <div class="highlight"><pre><span class="p">{</span>
   <span class="s2">"id"</span><span class="o">:</span><span class="s2">"f00"</span><span class="p">,</span>
@@ -220,15 +225,20 @@ buddycloud.Content.get({
 </pre></div>
 
 <h3>
-<a name="retrieving-media-files" class="anchor" href="#retrieving-media-files"><span class="octicon octicon-link"></span></a>Retrieving media files</h3>
+<a name="retrieving-files-from-buddycloud" class="anchor" href="#retrieving-files-from-buddycloud"><span class="octicon octicon-link"></span></a>Retrieving files from buddycloud</h3>
+
+<p><strong>Query</strong></p>
 
 <div class="highlight"><pre><span class="nx">buddycloud</span><span class="p">.</span><span class="nx">Media</span><span class="p">.</span><span class="nx">get</span><span class="p">({</span>
   <span class="nx">channel</span><span class="o">:</span> <span class="s1">'cats@topics.buddycloud.org'</span><span class="p">,</span>
-  <span class="nx">mediaId</span><span class="o">:</span> <span class="s1">'f00'</span>
+  <span class="nx">mediaId</span><span class="o">:</span> <span class="s1">'iL3fahp8'</span>
 <span class="p">}).</span><span class="nx">done</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
   <span class="nx">alert</span><span class="p">(</span><span class="s1">'Media retrieved!'</span><span class="p">);</span>
 <span class="p">});</span>
 </pre></div>
+
+<p><strong>Result</strong>
+Will return a file. There is a special mediaID called <code>avatar</code> to return the channels' avatar.</p>
 
 <p>You can also request a resized image using the <em>maxheight</em> and <em>maxwidth</em> parameters:</p>
 
