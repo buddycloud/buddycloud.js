@@ -590,5 +590,103 @@ $(document).ready(function() {
       );
     }
   );
-  
+
+  // buddycloud.Content.replies
+
+  var replies = [{
+      'id':'6735c5cc-056f-45ca-98de-37e8dc3835b0',
+      'author':'acct:test2@TEST.COM',
+      'published':'2013-05-29T18:44:15.676Z',
+      'updated':'2013-05-29T18:44:15.676Z',
+      'content':'boo',
+      'replyTo': itemId
+    },{
+      'id':'6b894bd0-f3a6-4d14-99df-a48674e944e3','author':'acct:test3@TEST.COM',
+      'published':'2013-06-01T19:38:47.051Z',
+      'updated':'2013-06-01T19:38:47.051Z',
+      'content':'hoo',
+      'replyTo': itemId
+    }];
+
+  test(
+    '.replies(): fetch specific item replies',
+
+    function() {
+      // Mock HTTP API server
+      var url = apiUrl + '/' + channel + '/content/' + node + '/' + itemId + '/replyto';
+      var server = this.sandbox.useFakeServer();
+      server.respondWith('GET', url,
+                         [200, {'Content-Type': 'application/json'}, JSON.stringify(replies)]);
+
+      var opt = {
+        url: url,
+        type: 'GET',
+        xhrFields: {withCredentials: true},
+        headers: {
+          'Authorization': Util.authHeader(user.jid, user.password),
+          'Accept': 'application/json'
+        }
+      };
+
+      buddycloud.Content.replies({'channel': channel, 'node': node, 'item': itemId}).done(function(data) {
+        equal(JSON.stringify(data), JSON.stringify(replies), 'successful item retrieve');
+      }).fail(function() {
+        ok(false, 'unexpected error');
+      }).always(function() {
+        checkAjax(opt);
+      });
+
+      server.respond();
+    }
+  );
+
+  test(
+    '.replies(): fetch specific item replies without login',
+
+    function() {
+      buddycloud.Auth.logout();
+
+      throws(
+        function() {
+          buddycloud.Content.replies({'channel': channel, 'node': node, 'item': itemId});
+        },
+        function(error) {
+          return error.message === Util.notLoggedMessage();
+        },
+        'throws required parameters error'
+      );
+    }
+  );
+
+  test(
+    '.replies(): not using required parameters',
+
+    function() {
+      throws(
+        function() {
+          buddycloud.Content.replies({'channel': channel, 'item': itemId});
+        },
+        function(error) {
+          return error.message === Util.paramMissingMessage('Content.replies({channel, node, item})');
+        },
+        'throws required parameters error'
+      );
+    }
+  );
+
+  test(
+    '.replies(): using no parameters',
+
+    function() {
+      throws(
+        function() {
+          buddycloud.Content.replies();
+        },
+        function(error) {
+          return error.message === Util.paramMissingMessage('Content.replies({channel, node, item})');
+        },
+        'throws required parameters error'
+      );
+    }
+  );
 });

@@ -447,6 +447,31 @@
       };
 
       return ajax(opt);
+    },
+
+    replies: function(path) {
+      if (!checkObject(path, 'channel', 'node', 'item')) {
+        raiseError(buddycloud.config.paramMissingErr, ['Content.replies({channel, node, item})']);
+      }
+
+      if (!ready()) {
+        raiseError(buddycloud.config.notLoggedErr);
+      }
+
+      var channel = path.channel;
+      var node = path.node;
+      var item = path.item;
+
+      var opt = {
+        url: apiUrl(channel, 'content', node, item, 'replyto'),
+        type: 'GET',
+        headers: {
+          'Authorization': authHeader(),
+          'Accept': 'application/json'
+        }
+      };
+
+      return ajax(opt);
     }
   };
 
