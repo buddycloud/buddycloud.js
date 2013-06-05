@@ -350,4 +350,189 @@ $(document).ready(function() {
       );
     }
   );
+
+  // buddycloud.Avatar.setMetadata
+
+  test(
+    '.setMetadata(): set avatar metadata',
+
+    function() {
+      var url = apiUrl + '/' + channel + '/media/avatar';
+
+      var newMetadata = $.extend({}, metadata);
+      newMetadata.filename = 'newname.jpg';
+      newMetadata.description = 'new desc';
+      newMetadata.title = 'new title';
+
+      // Mock HTTP API server
+      var server = this.sandbox.useFakeServer();
+      server.respondWith('POST', url,
+                         [200, {'Content-Type': 'application/json'}, JSON.stringify(newMetadata)]);
+
+
+      var post = {'filename': newMetadata.filename, 'title': newMetadata.title, 'description': newMetadata.description};
+
+      var opt = {
+        url: url,
+        type: 'POST',
+        xhrFields: {withCredentials: true},
+        headers: {
+          'Authorization': Util.authHeader(user.jid, user.password),
+          'Accept': 'application/json'
+        },
+        data: post
+      };
+
+      buddycloud.Avatar.setMetadata(channel, post).done(function(data) {
+        equal(JSON.stringify(data), JSON.stringify(newMetadata), 'avatar metadata successfully updated');
+      }).fail(function() {
+        // Force fail
+        ok(false, 'unexpected failure');
+      }).always(function() {
+        checkAjax(opt);
+      });
+
+      server.respond();
+    }
+  );
+
+  test(
+    '.setMetadata(): set avatar metadata without enough permissions',
+
+    function() {
+      var url = apiUrl + '/' + channel + '/media/avatar';
+
+      var newMetadata = $.extend({}, metadata);
+      newMetadata.filename = 'newname.jpg';
+      newMetadata.description = 'new desc';
+      newMetadata.title = 'new title';
+
+      // Mock HTTP API server
+      var server = this.sandbox.useFakeServer();
+      server.respondWith('POST', url,
+                         [403, {'Content-Type': 'text/plain'}, 'Forbidden']);
+
+
+      var post = {'filename': newMetadata.filename, 'title': newMetadata.title, 'description': newMetadata.description};
+
+      var opt = {
+        url: url,
+        type: 'POST',
+        xhrFields: {withCredentials: true},
+        headers: {
+          'Authorization': Util.authHeader(user.jid, user.password),
+          'Accept': 'application/json'
+        },
+        data: post
+      };
+
+      buddycloud.Avatar.setMetadata(channel, post).done(function(data) {
+        ok(false, 'unexpected success');
+      }).fail(function() {
+        ok(true, 'avatar metadata not updated');
+      }).always(function() {
+        checkAjax(opt);
+      });
+
+      server.respond();
+    }
+  );
+
+  test(
+    '.setMetadata(): set avatar metadata using invalid metadata fields',
+
+    function() {
+      var url = apiUrl + '/' + channel + '/media/avatar';
+
+      var newMetadata = $.extend({}, metadata);
+      newMetadata.title = 'new title';
+
+      // Mock HTTP API server
+      var server = this.sandbox.useFakeServer();
+      server.respondWith('POST', url,
+                         [200, {'Content-Type': 'application/json'}, JSON.stringify(newMetadata)]);
+
+
+      var post = {'abc': metadata.filename, 'title': newMetadata.title, '123': metadata.description};
+
+      var opt = {
+        url: url,
+        type: 'POST',
+        xhrFields: {withCredentials: true},
+        headers: {
+          'Authorization': Util.authHeader(user.jid, user.password),
+          'Accept': 'application/json'
+        },
+        data: {'title': newMetadata.title}
+      };
+
+      buddycloud.Avatar.setMetadata(channel, post).done(function(data) {
+        equal(JSON.stringify(data), JSON.stringify(newMetadata), 'avatar metadata successfully updated');
+      }).fail(function() {
+        // Force fail
+        ok(false, 'unexpected failure');
+      }).always(function() {
+        checkAjax(opt);
+      });
+
+      server.respond();
+    }
+  );
+
+  test(
+    '.setMetadata(): using not required parameters',
+
+    function() {
+      throws(
+        function() {
+          buddycloud.Avatar.setMetadata({'channel': channel, 'mediaId': metadata.id});
+        },
+        function(error) {
+          return error.message === Util.paramMissingMessage('Avatar.setMetadata(channel, {[filename, title, description]})');
+        },
+        'throws required parameters error'
+      );
+    }
+  );
+
+  test(
+    '.setMetadata(): using no parameters',
+
+    function() {
+      throws(
+        function() {
+          buddycloud.Avatar.setMetadata();
+        },
+        function(error) {
+          return error.message === Util.paramMissingMessage('Avatar.setMetadata(channel, {[filename, title, description]})');
+        },
+        'throws required parameters error'
+      );
+    }
+  );
+
+  test(
+    '.setMetadata(): update media metadata without being logged',
+
+    function() {
+      buddycloud.Auth.logout();
+
+      var newMetadata = $.extend({}, metadata);
+      newMetadata.filename = 'newname.jpg';
+      newMetadata.description = 'new desc';
+      newMetadata.title = 'new title';
+
+      var post = {'filename': newMetadata.filename};
+
+      throws(
+        function() {
+          buddycloud.Avatar.setMetadata(channel, post);
+        },
+        function(error) {
+          return error.message === Util.notLoggedMessage();
+        },
+        'throws not logged error'
+      );
+    }
+  );
 });

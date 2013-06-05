@@ -60,10 +60,14 @@
     buddycloud.config.email = credentials.email;
   }
 
+  function checkType(target, type) {
+    return target && typeof target === type;
+  }
+
   function checkObject() {
     var args = Array.prototype.slice.call(arguments);
     var object = args.shift();
-    if (!object) return false;
+    if (!checkType(object, 'object')) return false;
 
     var property = args.shift();
     while (property) {
@@ -226,7 +230,7 @@
 
   buddycloud.Avatar = {
     get: function(channel, params) {
-      if (!(channel && typeof channel === 'string')) {
+      if (!checkType(channel, 'string')) {
         raiseError(buddycloud.config.paramMissingErr, ['Avatar.get(channel[, {maxheight, maxwidth}])']);
       }
 
@@ -243,7 +247,7 @@
     },
 
     set: function(channel, media) {
-      if (!channel || !checkObject(media, 'file')) {
+      if (!checkType(channel, 'string') || !checkObject(media, 'file')) {
         raiseError(buddycloud.config.paramMissingErr, ['Avatar.set(channel, {file[, content-type, filename, title]})']);
       }
 
@@ -281,11 +285,34 @@
     },
 
     remove: function(channel) {
-      if (!channel) {
+      if (!checkType(channel, 'string')) {
         raiseError(buddycloud.config.paramMissingErr, ['Avatar.remove(channel)']);
       }
 
       return buddycloud.Media.remove({'channel': channel, 'mediaId': 'avatar'});
+    },
+
+    setMetadata: function(channel, metadata) {
+      if (!checkType(channel, 'string') || !checkObject(metadata)) {
+        raiseError(buddycloud.config.paramMissingErr, ['Avatar.setMetadata(channel, {[filename, title, description]})']);
+      }
+
+      if (!ready()) {
+        raiseError(buddycloud.config.notLoggedErr);
+      }
+
+      var opt = {
+        url: apiUrl(channel, 'media', 'avatar'),
+        type: 'POST',
+        headers: {
+          'Authorization': authHeader(),
+          'Accept': 'application/json'
+        }
+      };
+
+      insertValidParameters(opt, metadata, 'filename', 'title', 'description');
+
+      return ajax(opt);
     }
   };
 
@@ -334,7 +361,7 @@
 
   buddycloud.Channel = {
     create: function(channel) {
-      if (!channel) {
+      if (!checkType(channel, 'string')) {
         raiseError(buddycloud.config.paramMissingErr, ['Channel.create(channel)']);
       }
 
@@ -483,7 +510,7 @@
 
   buddycloud.Discovery = {
     recommendations: function(channel, params) {
-      if (!(channel && typeof channel === 'string')) {
+      if (!checkType(channel, 'string')) {
         raiseError(buddycloud.config.paramMissingErr, ['Discovery.recommendations(channel[, {max, index}])']);
       }
 
@@ -504,7 +531,7 @@
     },
 
     similar: function(channel, params) {
-      if (!(channel && typeof channel === 'string')) {
+      if (!checkType(channel, 'string')) {
         raiseError(buddycloud.config.paramMissingErr, ['Discovery.similar(channel[, {max, index}])']);
       }
 
@@ -566,7 +593,7 @@
 
   buddycloud.Media = {
     getMetadata: function(channel, params) {
-      if (!(channel && typeof channel === 'string')) {
+      if (!checkType(channel, 'string')) {
         raiseError(buddycloud.config.paramMissingErr, ['Media.getMetadata(channel[,{max, after}])']);
       }
 
@@ -614,7 +641,7 @@
     },
 
     add: function(channel, media) {
-      if (!(channel && typeof channel === 'string') || !checkObject(media, 'file')) {
+      if (!checkType(channel, 'string') || !checkObject(media, 'file')) {
         raiseError(buddycloud.config.paramMissingErr, ['Media.add(channel, {file[, content-type, filename, title]})']);
       }
 
@@ -670,6 +697,32 @@
           'Authorization': authHeader()
         }
       };
+
+      return ajax(opt);
+    },
+
+    setMetadata: function(media, metadata) {
+      if (!checkObject(media, 'channel', 'mediaId') || !checkObject(metadata)) {
+        raiseError(buddycloud.config.paramMissingErr, ['Media.setMetadata({channel, mediaId}, {[filename, title, description]})']);
+      }
+
+      if (!ready()) {
+        raiseError(buddycloud.config.notLoggedErr);
+      }
+
+      var channel = media.channel;
+      var mediaId = media.mediaId;
+
+      var opt = {
+        url: apiUrl(channel, 'media', mediaId),
+        type: 'POST',
+        headers: {
+          'Authorization': authHeader(),
+          'Accept': 'application/json'
+        }
+      };
+
+      insertValidParameters(opt, metadata, 'filename', 'title', 'description');
 
       return ajax(opt);
     }

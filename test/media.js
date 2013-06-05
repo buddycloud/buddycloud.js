@@ -42,7 +42,7 @@ $(document).ready(function() {
                   'height':3264,'width':2448,
                   'entityId':'test@TEST.COM'};
 
-  // buddycloud.Media.getMetadata
+  // buddycloud.Media.get
 
   test(
     '.getMetadata(): get all media metadata',
@@ -371,6 +371,191 @@ $(document).ready(function() {
           return error.message === Util.paramMissingMessage('Media.get({channel, mediaId}[, {maxheight, maxwidth}])');
         },
         'throws required parameters error'
+      );
+    }
+  );
+
+  // buddycloud.Media.setMetadata
+
+  test(
+    '.setMetadata(): set media metadata',
+
+    function() {
+      var url = apiUrl + '/' + channel + '/media/' + metadata1.id;
+
+      var newMetadata = $.extend({}, metadata1);
+      newMetadata.filename = 'newname.jpg';
+      newMetadata.description = 'new desc';
+      newMetadata.title = 'new title';
+
+      // Mock HTTP API server
+      var server = this.sandbox.useFakeServer();
+      server.respondWith('POST', url,
+                         [200, {'Content-Type': 'application/json'}, JSON.stringify(newMetadata)]);
+
+
+      var post = {'filename': newMetadata.filename, 'title': newMetadata.title, 'description': newMetadata.description};
+
+      var opt = {
+        url: url,
+        type: 'POST',
+        xhrFields: {withCredentials: true},
+        headers: {
+          'Authorization': Util.authHeader(user.jid, user.password),
+          'Accept': 'application/json'
+        },
+        data: post
+      };
+
+      buddycloud.Media.setMetadata({'channel': channel, 'mediaId': newMetadata.id}, post).done(function(data) {
+        equal(JSON.stringify(data), JSON.stringify(newMetadata), 'media metadata successfully updated');
+      }).fail(function() {
+        // Force fail
+        ok(false, 'unexpected failure');
+      }).always(function() {
+        checkAjax(opt);
+      });
+
+      server.respond();
+    }
+  );
+
+  test(
+    '.setMetadata(): set media metadata without enough permissions',
+
+    function() {
+      var url = apiUrl + '/' + channel + '/media/' + metadata1.id;
+
+      var newMetadata = $.extend({}, metadata1);
+      newMetadata.filename = 'newname.jpg';
+      newMetadata.description = 'new desc';
+      newMetadata.title = 'new title';
+
+      // Mock HTTP API server
+      var server = this.sandbox.useFakeServer();
+      server.respondWith('POST', url,
+                         [403, {'Content-Type': 'text/plain'}, 'Forbidden']);
+
+
+      var post = {'filename': newMetadata.filename, 'title': newMetadata.title, 'description': newMetadata.description};
+
+      var opt = {
+        url: url,
+        type: 'POST',
+        xhrFields: {withCredentials: true},
+        headers: {
+          'Authorization': Util.authHeader(user.jid, user.password),
+          'Accept': 'application/json'
+        },
+        data: post
+      };
+
+      buddycloud.Media.setMetadata({'channel': channel, 'mediaId': newMetadata.id}, post).done(function(data) {
+        ok(false, 'unexpected success');
+      }).fail(function() {
+        ok(true, 'media metadata not updated');
+      }).always(function() {
+        checkAjax(opt);
+      });
+
+      server.respond();
+    }
+  );
+
+  test(
+    '.setMetadata(): set media metadata using invalid metadata fields',
+
+    function() {
+      var url = apiUrl + '/' + channel + '/media/' + metadata1.id;
+
+      var newMetadata = $.extend({}, metadata1);
+      newMetadata.description = 'new desc';
+
+      // Mock HTTP API server
+      var server = this.sandbox.useFakeServer();
+      server.respondWith('POST', url,
+                         [200, {'Content-Type': 'application/json'}, JSON.stringify(newMetadata)]);
+
+
+      var post = {'abc': newMetadata.filename, '123': newMetadata.title, 'description': newMetadata.description};
+
+      var opt = {
+        url: url,
+        type: 'POST',
+        xhrFields: {withCredentials: true},
+        headers: {
+          'Authorization': Util.authHeader(user.jid, user.password),
+          'Accept': 'application/json'
+        },
+        data: {'description': newMetadata.description}
+      };
+
+      buddycloud.Media.setMetadata({'channel': channel, 'mediaId': newMetadata.id}, post).done(function(data) {
+        equal(JSON.stringify(data), JSON.stringify(newMetadata), 'media metadata successfully updated');
+      }).fail(function() {
+        // Force fail
+        ok(false, 'unexpected failure');
+      }).always(function() {
+        checkAjax(opt);
+      });
+
+      server.respond();
+    }
+  );
+
+  test(
+    '.setMetadata(): using not required parameters',
+
+    function() {
+      throws(
+        function() {
+          buddycloud.Media.setMetadata({'channel': channel, 'mediaId': metadata1.id});
+        },
+        function(error) {
+          return error.message === Util.paramMissingMessage('Media.setMetadata({channel, mediaId}, {[filename, title, description]})');
+        },
+        'throws required parameters error'
+      );
+    }
+  );
+
+  test(
+    '.setMetadata(): using no parameters',
+
+    function() {
+      throws(
+        function() {
+          buddycloud.Media.setMetadata();
+        },
+        function(error) {
+          return error.message === Util.paramMissingMessage('Media.setMetadata({channel, mediaId}, {[filename, title, description]})');
+        },
+        'throws required parameters error'
+      );
+    }
+  );
+
+  test(
+    '.setMetadata(): update media metadata without being logged',
+
+    function() {
+      buddycloud.Auth.logout();
+
+      var newMetadata = $.extend({}, metadata1);
+      newMetadata.filename = 'newname.jpg';
+      newMetadata.description = 'new desc';
+      newMetadata.title = 'new title';
+
+      var post = {'filename': newMetadata.filename};
+
+      throws(
+        function() {
+          buddycloud.Media.setMetadata({'channel': channel, 'mediaId': newMetadata.id}, post);
+        },
+        function(error) {
+          return error.message === Util.notLoggedMessage();
+        },
+        'throws not logged error'
       );
     }
   );
