@@ -171,7 +171,7 @@
 
 
   buddycloud.config = {
-    url: 'https://api.buddycloud.org',
+    url: 'https://demo.buddycloud.org/api',
     domain: 'buddycloud.org',
     jid: null,
     credentials: null,
@@ -427,7 +427,7 @@
 
     add: function(item) {
       if (!checkObject(item, 'channel', 'node', 'content')) {
-        raiseError(buddycloud.config.paramMissingErr, ['Content.add({channel, node, content})']);
+        raiseError(buddycloud.config.paramMissingErr, ['Content.add({channel, node, content[, media]})']);
       }
 
       if (!ready()) {
@@ -437,6 +437,7 @@
       var channel = item.channel;
       var node = item.node;
       var content = item.content;
+      var media = item.media;
 
       var opt = {
         url: apiUrl(channel, 'content', node),
@@ -445,7 +446,7 @@
           'Authorization': authHeader(),
           'Accept': 'application/json'
         },
-        data: JSON.stringify({'content': content}),
+        data: JSON.stringify({'content': content, 'media': media}),
         dataType: 'json'
       };
 
