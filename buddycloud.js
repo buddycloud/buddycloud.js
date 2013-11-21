@@ -1,7 +1,7 @@
 //     buddycloud.js 0.0.1
 
 
- //     Copyright 2012 buddycloud
+ //     Copyright 2013 buddycloud
  //
  //     Licensed under the Apache License, Version 2.0 (the "License");
  //     you may not use this file except in compliance with the License.
