@@ -1,6 +1,6 @@
 buddycloud.js
 =============
 
-It's like magic, but it's technology.
+Send and receive buddycloud posts in Javascript.
 
 [documentation](http:/buddycloudjs.buddycloud.com)
