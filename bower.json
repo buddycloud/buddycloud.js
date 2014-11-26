@@ -1,0 +1,22 @@
+{
+  "name": "buddycloud",
+  "version": "0.0.0",
+  "homepage": "https://github.com/buddycloud/buddycloud.js",
+  "authors": [
+    "Severin Kistner <sekistner@gmail.com>"
+  ],
+  "description": "Buddycloud browser client",
+  "main": "buddycloud.js",
+  "keywords": [
+    "buddycloud",
+    "xmpp"
+  ],
+  "license": "Apache-2.0",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
