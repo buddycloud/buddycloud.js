@@ -18,5 +18,8 @@
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "dependencies": {
+    "primus": "https://github.com/primus/primus.git#~2.4.12"
+  }
 }
