@@ -33,13 +33,13 @@ We should explain something to the user about receiving events here. Or tell the
 
 Buddycloud usernames look like `username@domain.com`. 
 
-- problem cases: developers try to register just `user` instead of `user@domain`
-- if the site requires and email, should this be a config variable?
-- should also create /user/user@domain/posts node
+> problem cases: developers try to register just `user` instead of `user@domain`
+> if the site requires and email, should this be a config variable?
+> should also create /user/user@domain/posts node?
 
 ### Registering a user
 
-- we should also create their personal channel at the sametime?
+> we should also create their personal channel at the sametime?
 
 To register a new user on your Buddycloud domain, run the following code.
 
@@ -55,8 +55,8 @@ ServerHandler.register({
 The server will reply with `xxx`. You now have a registered user.
 
 ### Remote a user
-- removes their personal channel
-- removes their `jid`
+> removes their personal channel by default
+> removes their `xmpp account`
 
 To remove a user run the following code
 ```javascript
@@ -70,8 +70,8 @@ There are three types of channels
 * ephemeral (designed for group chat - and disappear when the last user leaves)
 
 ### Create a channel
-- go for a create-and-invite atomic operation
-- create should include the following inputs: type-of-channel, metadata, invites, optional: node-name
+> go for a create-and-invite atomic operation
+> create should include the following inputs: type-of-channel, metadata, invites, optional: node-name
 
 ### Delete a channel
 - removes posts
@@ -86,7 +86,7 @@ There are three types of channels
 ## Followers
 ### change follower role
 ### invite follower
-- or is this part of a channel creation? Think here make more sense. 
+> or is this part of a channel creation? Think here make more sense. 
 ## Media
 ## Search
-- parameters: on-server, remote
+> parameters: on-server, remote
