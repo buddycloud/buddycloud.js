@@ -74,7 +74,7 @@ There are three types of channels
 > create should include the following inputs: type-of-channel, metadata, invites, optional: node-name
 
 ### Delete a channel
-- removes posts
+> removes posts
 
 ## Posts
 ### Get posts
@@ -87,6 +87,7 @@ There are three types of channels
 ### change follower role
 ### invite follower
 > or is this part of a channel creation? Think here make more sense. 
+
 ## Media
 ## Search
 > parameters: on-server, remote
