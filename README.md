@@ -7,7 +7,7 @@ buddycloud.js: a channel wrangler using [XMPP-FTW](https://xmpp-ftw.jit.su).
 
 Include `buddycloud.js` in your project
 ```javascript
-<script type="text/javascript" src="https://example.com/js/buddycloud.js"></script>
+<script type="text/javascript" src="https://example.com/api/scripts/buddycloud.js"></script>
 ```
 
 ### Configure the API endpoint
